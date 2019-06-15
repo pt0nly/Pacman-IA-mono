@@ -129,6 +129,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\sprites\Blinky-Red.png" />
+    <Content Include="Content\sprites\BlueGhost.png" />
+    <Content Include="Content\sprites\chompermazetiles.png" />
+    <Content Include="Content\sprites\Clyde-Orange.png" />
+    <Content Include="Content\sprites\ExtraGhost-Purple.png" />
+    <Content Include="Content\sprites\Inky-Cyan.png" />
+    <Content Include="Content\sprites\Pacman.png" />
+    <Content Include="Content\sprites\Pinky-Pink.png" />
     <Content Include="Content\textures\background.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
