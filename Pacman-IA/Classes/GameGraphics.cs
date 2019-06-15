@@ -29,6 +29,12 @@ namespace Pacman_IA.Classes
         {
             game.IsMouseVisible = true;
             mainFrame = new Rectangle(0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
+
+            GameVars.Pacman = new GameItem();
+            GameVars.Blinky = new GameItem();
+            GameVars.Pinky = new GameItem();
+            GameVars.Inky = new GameItem();
+            GameVars.Clyde = new GameItem();
         }
 
         public static void LoadContent()
@@ -38,6 +44,12 @@ namespace Pacman_IA.Classes
 
             // Load the background content.
             background = game.Content.Load<Texture2D>(@"textures\background");
+
+            GameVars.Pacman.Texture = game.Content.Load<Texture2D>(@"sprites\Pacman");
+            GameVars.Blinky.Texture = game.Content.Load<Texture2D>(@"sprites\Blinky-Red");
+            GameVars.Pinky.Texture = game.Content.Load<Texture2D>(@"sprites\Pinky-Pink");
+            GameVars.Inky.Texture = game.Content.Load<Texture2D>(@"sprites\Inky-Cyan");
+            GameVars.Clyde.Texture = game.Content.Load<Texture2D>(@"sprites\Clyde-Orange");
         }
 
         public static void Draw(GameTime gameTime)
