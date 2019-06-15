@@ -57,8 +57,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\GameGraphics.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="GameVars.cs" />
+    <Compile Include="Classes\GameVars.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

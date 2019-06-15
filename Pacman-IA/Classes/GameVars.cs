@@ -6,14 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pacman_IA
+namespace Pacman_IA.Classes
 {
     public static class GameVars
     {
-        public static int GAME_WIDTH = 800;
-        public static int GAME_HEIGHT = 600;
-
-        public static GraphicsDeviceManager graphics;
-        public static SpriteBatch spriteBatch;
     }
 }
