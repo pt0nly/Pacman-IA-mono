@@ -10,6 +10,7 @@ namespace Pacman_IA
         public Game1()
         {
             GameGraphics.Setup(this);
+            GameMap.Setup(this);
 
             Content.RootDirectory = "Content";
         }
@@ -17,6 +18,7 @@ namespace Pacman_IA
         protected override void Initialize()
         {
             GameGraphics.Init();
+            GameMap.Init();
 
             base.Initialize();
         }
@@ -24,6 +26,7 @@ namespace Pacman_IA
         protected override void LoadContent()
         {
             GameGraphics.LoadContent();
+            GameMap.LoadContent();
         }
 
         protected override void UnloadContent()
@@ -34,6 +37,8 @@ namespace Pacman_IA
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            GameMap.Update();
 
             base.Update(gameTime);
         }

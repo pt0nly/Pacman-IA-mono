@@ -50,6 +50,9 @@ namespace Pacman_IA.Classes
             GameVars.Pinky.Texture = game.Content.Load<Texture2D>(@"sprites\Pinky-Pink");
             GameVars.Inky.Texture = game.Content.Load<Texture2D>(@"sprites\Inky-Cyan");
             GameVars.Clyde.Texture = game.Content.Load<Texture2D>(@"sprites\Clyde-Orange");
+
+            // Load map content.
+            GameMap.LoadContent();
         }
 
         public static void Draw(GameTime gameTime)
@@ -63,6 +66,8 @@ namespace Pacman_IA.Classes
             spriteBatch.End();
 
             spriteBatch.Begin();
+
+            GameMap.Draw();
 
             spriteBatch.End();
         }
