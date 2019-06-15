@@ -9,12 +9,15 @@ namespace Pacman_IA
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        
+        Texture2D background;
+
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            GameVars.graphics = new GraphicsDeviceManager(this);
+            GameVars.graphics.PreferredBackBufferWidth = GameVars.GAME_WIDTH;
+            GameVars.graphics.PreferredBackBufferHeight = GameVars.GAME_HEIGHT;
+            GameVars.graphics.IsFullScreen = false;
+
             Content.RootDirectory = "Content";
         }
 
@@ -27,6 +30,7 @@ namespace Pacman_IA
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            this.IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -38,9 +42,10 @@ namespace Pacman_IA
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            GameVars.spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // Load the background content.
+            background = Content.Load<Texture2D>(@"textures\background");
         }
 
         /// <summary>
@@ -73,9 +78,19 @@ namespace Pacman_IA
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Yellow);
 
-            // TODO: Add your drawing code here
+
+            // Draw Tiled Background
+            GameVars.spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
+            GameVars.spriteBatch.Draw(background, new Vector2(0, 0), new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
+            GameVars.spriteBatch.End();
+
+
+            GameVars.spriteBatch.Begin();
+
+            GameVars.spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
