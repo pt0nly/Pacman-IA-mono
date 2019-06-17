@@ -9,7 +9,6 @@ namespace Pacman_IA.Classes
     public static class GameMap
     {
         private static Game game;
-        //private static Texture2D tilemap;
         private static GameItem tile;
 
         public static void Setup(Game gameMain)
@@ -27,7 +26,7 @@ namespace Pacman_IA.Classes
         public static void LoadContent()
         {
             //tilemap = game.Content.Load<Texture2D>(@"sprites\chompermazetiles");
-            tile.Texture = game.Content.Load<Texture2D>(@"sprites\chompermazetiles");
+            tile.Texture = GameGraphics.Content.Load<Texture2D>(@"sprites\chompermazetiles");
         }
 
         public static void Update()

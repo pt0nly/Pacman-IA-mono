@@ -6,6 +6,8 @@ namespace Pacman_IA.Sprites
 {
     public class Animated
     {
+        private const float DEFAULT_SPEED = 45.0f;
+
         protected string name;
         protected Texture2D texture;
         protected int rows;
@@ -15,6 +17,8 @@ namespace Pacman_IA.Sprites
         protected int currentFrame;
         protected int totalFrames;
 
+        private float elapsedTime;
+
         protected Vector2 location;
         protected Rectangle srcRect;
         protected Rectangle dstRect;
@@ -22,28 +26,16 @@ namespace Pacman_IA.Sprites
 
         #region Properties
 
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-
-            set
-            {
-                this.name = value;
-            }
+        public string Name {
+            get { return this.name; }
+            set { this.name = value; }
         }
 
         public int Rows
         {
-            get
-            {
-                return this.rows;
-            }
+            get { return this.rows; }
 
-            set
-            {
+            set {
                 this.rows = value;
                 this.height = this.texture.Height / this.rows;
             }
@@ -51,19 +43,27 @@ namespace Pacman_IA.Sprites
 
         public int Columns
         {
-            get
-            {
-                return this.columns;
-            }
+            get { return this.columns; }
 
-            set
-            {
+            set {
                 this.columns = value;
                 this.width = this.texture.Width / this.columns;
             }
         }
 
+        protected int CurrentRow
+        {
+            get { return (int)((float)currentFrame / (float)Columns); }
+        }
+
+        protected int CurrentColumn
+        {
+            get { return currentFrame % Columns; }
+        }
+
         #endregion
+
+        #region Constructor
 
         protected void InitSetup(Texture2D texture, int rows, int columns, string name)
         {
@@ -72,8 +72,9 @@ namespace Pacman_IA.Sprites
             Rows = rows;
             Columns = columns;
 
-            this.currentFrame = 0;
-            this.totalFrames = this.rows * this.columns;
+            currentFrame = 0;
+            totalFrames = this.rows * this.columns;
+            elapsedTime = 0.0f;
         }
 
         public Animated(Texture2D texture, int rows, int columns)
@@ -86,24 +87,25 @@ namespace Pacman_IA.Sprites
             InitSetup(texture, rows, columns, name);
         }
 
-        protected int getCurrentRow()
-        {
-            return (int)((float)currentFrame / (float)columns);
-        }
+        #endregion
 
-        protected int getCurrentColumn()
-        {
-            return currentFrame % columns;
-        }
 
         public void Update(Vector2 location)
         {
-            currentFrame++;
-            if (currentFrame == totalFrames)
-                currentFrame = 0;
+            // Check Elapsed time
+            elapsedTime += (float)GameVars.gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (elapsedTime >= 0f)
+            {
+                currentFrame++;
+                if (currentFrame == totalFrames)
+                    currentFrame = 0;
+
+                elapsedTime = 0.0f;
+            }
 
             this.location = location;
-            srcRect = new Rectangle(width * getCurrentColumn(), height * getCurrentRow(), width, height);
+            srcRect = new Rectangle(width * CurrentColumn, height * CurrentRow, width, height);
             dstRect = new Rectangle((int)location.X, (int)location.Y, width, height);
         }
 

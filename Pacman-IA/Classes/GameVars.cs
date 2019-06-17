@@ -1,4 +1,6 @@
-﻿
+﻿using Microsoft.Xna.Framework;
+using Pacman_IA.GameObjects;
+
 namespace Pacman_IA.Classes
 {
     public static class GameVars
@@ -7,10 +9,14 @@ namespace Pacman_IA.Classes
 
         public const int STARTING_LIVES = 3;
 
-        public static GameItem Pacman;
-        public static GameItem Blinky;
-        public static GameItem Pinky;
-        public static GameItem Inky;
-        public static GameItem Clyde;
+        public static Pacman Pacman;
+        public static Blinky Blinky;
+        public static Pinky Pinky;
+        public static Inky Inky;
+        public static Clyde Clyde;
+
+        public static Player Player;
+
+        public static GameTime gameTime;
     }
 }

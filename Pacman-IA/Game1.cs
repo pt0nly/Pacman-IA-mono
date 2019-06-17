@@ -11,8 +11,6 @@ namespace Pacman_IA
         {
             GameGraphics.Setup(this);
             GameMap.Setup(this);
-
-            Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
@@ -38,14 +36,22 @@ namespace Pacman_IA
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            GameVars.gameTime = gameTime;
+
+            GameGraphics.Update();
+
             GameMap.Update();
+
+            GameVars.Pacman.Update();
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GameGraphics.Draw(gameTime);
+            GameVars.gameTime = gameTime;
+
+            GameGraphics.Draw();
 
             base.Draw(gameTime);
         }
