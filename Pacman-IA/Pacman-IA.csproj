@@ -68,7 +68,6 @@
     <Compile Include="GameObjects\Character.cs" />
     <Compile Include="GameObjects\Blinky.cs" />
     <Compile Include="GameObjects\Pacman.cs" />
-    <Compile Include="GameObjects\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprites\Animated.cs" />

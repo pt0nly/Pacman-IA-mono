@@ -15,8 +15,6 @@ namespace Pacman_IA.Classes
         public static Inky Inky;
         public static Clyde Clyde;
 
-        public static Player Player;
-
         public static GameTime gameTime;
     }
 }
