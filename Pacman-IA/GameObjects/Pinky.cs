@@ -17,6 +17,7 @@ namespace Pacman_IA.GameObjects
             sprite.animationAdd("up", 6, 8, 260.0f);
 
             Speed = new Vector2(60, 60);
+            Speed = Vector2.Zero;
         }
 
 

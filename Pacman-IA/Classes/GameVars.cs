@@ -16,5 +16,17 @@ namespace Pacman_IA.Classes
         public static Clyde Clyde;
 
         public static GameTime gameTime;
+
+        public enum WALL_TYPE
+        {
+            NORMAL = 0,
+            DOOR = 100
+        };
+
+        public enum PELLET_TYPE
+        {
+            NORMAL = 0,
+            POWER = 2
+        }
     }
 }

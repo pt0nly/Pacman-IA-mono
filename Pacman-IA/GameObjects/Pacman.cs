@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Pacman_IA.Classes;
 using Pacman_IA.Sprites;
 
@@ -53,5 +54,39 @@ namespace Pacman_IA.GameObjects
         }
 
         #endregion
+
+
+        public override void Update()
+        {
+            // Update which Animation/Movement
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                command = "left";
+                direction = new Vector2(-1, 0);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                command = "right";
+                direction = new Vector2(1, 0);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                command = "down";
+                direction = new Vector2(0, 1);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                command = "up";
+                direction = new Vector2(0, -1);
+            }
+            else
+            {
+                //command = "idle";
+                sprite.animationStop();
+                direction = Vector2.Zero;
+            }
+
+            base.Update();
+        }
     }
 }

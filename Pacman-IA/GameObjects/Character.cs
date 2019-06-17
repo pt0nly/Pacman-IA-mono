@@ -96,8 +96,9 @@ namespace Pacman_IA.GameObjects
 
         #endregion
 
-        public void Update()
+        public virtual void Update()
         {
+            /*
             // Update which Animation/Movement
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
@@ -125,6 +126,7 @@ namespace Pacman_IA.GameObjects
                 sprite.animationStop();
                 direction = Vector2.Zero;
             }
+            */
 
             // Update location
             location.X += direction.X * speed.X * (float)GameVars.gameTime.ElapsedGameTime.TotalSeconds;

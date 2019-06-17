@@ -1,7 +1,9 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Pacman_IA.GameObjects;
 using Pacman_IA.Sprites;
+using System.Collections.Generic;
 
 namespace Pacman_IA.Classes
 {
@@ -22,8 +24,12 @@ namespace Pacman_IA.Classes
         private const int CLYDE = 500;
         private const int CLYDE_HOME = 510;
 
+        private static Texture2D texture;
         private static int[,] level;
         private static int leftOffset;
+
+        private static List<Wall> walls;
+        private static List<Pellet> pellets;
 
         public static void Setup(Game gameMain)
         {
@@ -34,6 +40,9 @@ namespace Pacman_IA.Classes
         {
             firstTime = true;
             leftOffset = 0;
+
+            walls = new List<Wall>();
+            pellets = new List<Pellet>();
 
             // 17(19) x 25
             int[,] level1 = new int[,] {
@@ -88,10 +97,14 @@ namespace Pacman_IA.Classes
 
         public static void LoadContent()
         {
-            tileSprite = new Sprite(GameGraphics.Content.Load<Texture2D>(@"sprites\chompermazetiles"), 3, 10);
+            texture = GameGraphics.Content.Load<Texture2D>(@"sprites\chompermazetiles");
+
+            tileSprite = new Sprite(texture, 3, 10);
             tileSprite.animationAdd("idle", 0, 30, false, 0.0f);
 
             leftOffset = (int)(GameGraphics.graphics.PreferredBackBufferWidth / 2) - ((level.GetLength(1) * tileSprite.Width) / 2);
+
+            LoadCharacterPosition();
         }
 
         private static void LoadCharacterPosition()
@@ -156,6 +169,30 @@ namespace Pacman_IA.Classes
                         if (GameVars.Clyde.HomeLocation == Vector2.Zero)
                             GameVars.Clyde.HomeLocation = curLocation;
                     }
+                    else
+                    {
+                        tileSprite.Update((frame > DOOR ? (frame - DOOR) : frame) - 1);
+                        Sprite curSprite = new Sprite(texture, 3, 10);
+
+                        if (frame < 28 || frame > DOOR)
+                        {
+                            // This will be treated as Walls
+                            GameVars.WALL_TYPE wallType = (frame > DOOR ? GameVars.WALL_TYPE.DOOR : GameVars.WALL_TYPE.NORMAL);
+                            frame = (frame > DOOR ? frame - DOOR : frame) - 1;
+
+                            curSprite.animationAdd("idle", frame, frame, false, 0.0f);
+
+                            walls.Add(new Wall(curSprite, curLocation, wallType));
+                        }
+                        else
+                        {
+                            // This will be treated as Pellets/Power-Pellets
+                            GameVars.PELLET_TYPE pelletType = (frame == 30 ? GameVars.PELLET_TYPE.NORMAL : GameVars.PELLET_TYPE.POWER);
+                            frame--;
+
+                            pellets.Add(new Pellet(curSprite, curLocation, frame, pelletType));
+                        }
+                    }
                 }
             }
         }
@@ -165,14 +202,32 @@ namespace Pacman_IA.Classes
             if (firstTime)
             {
                 firstTime = false;
-
                 tileSprite.animationPlay("idle");
-                LoadCharacterPosition();
+            }
+
+            foreach(var wall in walls)
+            {
+                wall.Update();
+            }
+
+            foreach(var pellet in pellets)
+            {
+                pellet.Update();
             }
         }
 
         public static void Draw()
         {
+            foreach(var wall in walls)
+            {
+                wall.Draw();
+            }
+
+            foreach(var pellet in pellets)
+            {
+                pellet.Draw();
+            }
+            /*
             for(int lin=0; lin<level.GetLength(0); lin++)
             {
                 for(int col=0; col<level.GetLength(1); col++)
@@ -188,6 +243,7 @@ namespace Pacman_IA.Classes
                         tileSprite.Draw(tilePos);
                 }
             }
+            */
         }
     }
 }
