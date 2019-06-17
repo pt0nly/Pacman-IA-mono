@@ -26,6 +26,7 @@ namespace Pacman_IA.Sprites
 
         private Rectangle srcRect;
         private Rectangle dstRect;
+        private Color tint;
 
         #region Properties
 
@@ -37,6 +38,12 @@ namespace Pacman_IA.Sprites
         {
             get { return playing; }
             set { playing = value; }
+        }
+
+        public int CurrentFrame
+        {
+            get { return currentFrame; }
+            set { currentFrame = value; }
         }
 
         #endregion
@@ -105,7 +112,7 @@ namespace Pacman_IA.Sprites
                 // Check Elapsed time
                 elapsedTime += (float)GameVars.gameTime.ElapsedGameTime.TotalMilliseconds;
 
-                if (elapsedTime >= speed)
+                if (speed > 0.0f && elapsedTime >= speed)
                 {
                     currentFrame++;
                     if (currentFrame >= endFrame)
@@ -118,6 +125,7 @@ namespace Pacman_IA.Sprites
                 }
 
                 srcRect = new Rectangle(width * CurrentColumn, height * CurrentRow, width, height);
+                tint = Color.White;
             }
         }
 
@@ -127,8 +135,14 @@ namespace Pacman_IA.Sprites
             {
                 dstRect = new Rectangle((int)location.X, (int)location.Y, width, height);
 
-                GameGraphics.spriteBatch.Draw(texture, dstRect, srcRect, Color.White);
+                GameGraphics.spriteBatch.Draw(texture, dstRect, srcRect, tint);
             }
+        }
+
+        public void Play(Vector2 location, Color newTint)
+        {
+            tint = newTint;
+            Play(location);
         }
     }
 }

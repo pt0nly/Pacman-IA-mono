@@ -11,6 +11,7 @@ namespace Pacman_IA.GameObjects
         protected string name;
         protected Sprite sprite;
         protected Vector2 location;
+        protected Vector2 homeLocation;
 
         protected string command;
         protected Vector2 speed;
@@ -19,6 +20,10 @@ namespace Pacman_IA.GameObjects
         #region Properties
 
         public Vector2 Location { set { location = value; } }
+        public Vector2 HomeLocation {
+            get { return homeLocation; }
+            set { homeLocation = value; }
+        }
 
         protected Vector2 Speed { set { speed = value; } }
 
@@ -39,6 +44,7 @@ namespace Pacman_IA.GameObjects
             this.name = name;
 
             Location = location;
+            HomeLocation = Vector2.Zero;
             speed = new Vector2(150, 150);
             direction = Vector2.Zero;
 

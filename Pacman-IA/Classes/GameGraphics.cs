@@ -78,6 +78,8 @@ namespace Pacman_IA.Classes
             if (Keyboard.GetState().IsKeyDown(Keys.F10))
                 graphics.ToggleFullScreen();
 
+            GameMap.Update();
+
             GameVars.Pacman.Update();
             GameVars.Blinky.Update();
             GameVars.Pinky.Update();
@@ -87,13 +89,15 @@ namespace Pacman_IA.Classes
 
         public static void Draw()
         {
-            game.GraphicsDevice.Clear(Color.Yellow);
+            game.GraphicsDevice.Clear(Color.Black);
 
 
             // Draw Tiled Background
+            /**
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
             spriteBatch.Draw(background, Vector2.Zero, mainFrame, Color.White);
             spriteBatch.End();
+            /**/
 
             spriteBatch.Begin();
 

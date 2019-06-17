@@ -37,12 +37,7 @@ namespace Pacman_IA
                 Exit();
 
             GameVars.gameTime = gameTime;
-
             GameGraphics.Update();
-
-            GameMap.Update();
-
-            GameVars.Pacman.Update();
 
             base.Update(gameTime);
         }

@@ -36,9 +36,19 @@ namespace Pacman_IA.Sprites
             }
         }
 
+        public int Width { get { return width; } }
+        public int Height { get { return height; } }
+
         public bool IsPlaying
         {
             get { return animations[currentAnimation].IsPlaying; }
+            set { animations[currentAnimation].IsPlaying = value; }
+        }
+
+        private int CurrentFrame
+        {
+            get { return animations[currentAnimation].CurrentFrame; }
+            set { animations[currentAnimation].CurrentFrame = value; }
         }
 
         #endregion
@@ -122,10 +132,24 @@ namespace Pacman_IA.Sprites
             }
         }
 
+        public void Update(int currFrame)
+        {
+            if (currentAnimation != "")
+                CurrentFrame = currFrame;
+
+            Update();
+        }
+
         public void Draw(Vector2 location)
         {
             if (currentAnimation != "")
                 animations[currentAnimation].Play(location);
+        }
+
+        public void Draw(Vector2 location, Color tint)
+        {
+            if (currentAnimation != "")
+                animations[currentAnimation].Play(location, tint);
         }
     }
 }
