@@ -2,11 +2,16 @@
 using Microsoft.Xna.Framework.Graphics;
 using Pacman_IA.Classes;
 using Pacman_IA.Sprites;
+using Pacman_IA.Behaviour;
 
 namespace Pacman_IA.GameObjects
 {
     public class Pinky : Character
     {
+        private ChaseBehaviour chaseBehaviour;
+        private ScatterBehaviour scatterBehaviour;
+        private FrightnedBehaviour frightnedBehaviour;
+
         protected override void LoadSprite()
         {
             sprite = new Sprite(GameGraphics.Content.Load<Texture2D>(@"sprites\Pinky-Pink"), 4, 2);
@@ -20,6 +25,12 @@ namespace Pacman_IA.GameObjects
             Speed = Vector2.Zero;
         }
 
+        protected override void InitBehaviour()
+        {
+            chaseBehaviour = new ChaseAmbush();
+            scatterBehaviour = new ScatterBehaviour();
+            frightnedBehaviour = new FrightnetWandering();
+        }
 
         #region Constructor
 

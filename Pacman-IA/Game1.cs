@@ -15,6 +15,7 @@ namespace Pacman_IA
 
         protected override void Initialize()
         {
+            GameVars.Game_Loaded = false;
             GameGraphics.Init();
             GameMap.Init();
 
@@ -25,6 +26,8 @@ namespace Pacman_IA
         {
             GameGraphics.LoadContent();
             GameMap.LoadContent();
+
+            GameVars.Game_Loaded = true;
         }
 
         protected override void UnloadContent()

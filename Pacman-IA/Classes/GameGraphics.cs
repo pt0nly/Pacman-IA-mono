@@ -17,6 +17,7 @@ namespace Pacman_IA.Classes
         public static GraphicsDeviceManager graphics;
         private static ContentManager content;
         public static SpriteBatch spriteBatch;
+        public static SpriteFont gameFont;
 
         private static Texture2D background;
         private static Rectangle mainFrame;
@@ -67,6 +68,7 @@ namespace Pacman_IA.Classes
             GameVars.Inky = new Inky(new Vector2(300, 450), "left");
             GameVars.Clyde = new Clyde(new Vector2(300, 500), "left");
 
+            gameFont = Content.Load<SpriteFont>("gameFont");
 
             // Load map content.
             GameMap.LoadContent();
@@ -78,13 +80,13 @@ namespace Pacman_IA.Classes
             if (Keyboard.GetState().IsKeyDown(Keys.F10))
                 graphics.ToggleFullScreen();
 
-            GameMap.Update();
-
             GameVars.Pacman.Update();
             GameVars.Blinky.Update();
             GameVars.Pinky.Update();
             GameVars.Inky.Update();
             GameVars.Clyde.Update();
+
+            GameMap.Update();
         }
 
         public static void Draw()

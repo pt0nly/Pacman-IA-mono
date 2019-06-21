@@ -3,11 +3,17 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pacman_IA.Classes;
 using Pacman_IA.Sprites;
+using Pacman_IA.Behaviour;
+using System;
+using System.Collections.Generic;
 
 namespace Pacman_IA.GameObjects
 {
     public class Pacman : Character
     {
+        private EatBehaviour eatBehaviour;
+        private HuntBehaviour huntBehaviour;
+
         protected override void LoadSprite()
         {
             sprite = new Sprite(GameGraphics.Content.Load<Texture2D>(@"sprites\Pacman"), 4, 2);
@@ -20,6 +26,11 @@ namespace Pacman_IA.GameObjects
             Speed = new Vector2(60, 60);
         }
 
+        protected override void InitBehaviour()
+        {
+            eatBehaviour = new EatBehaviour();
+            huntBehaviour = new HuntBehaviour();
+        }
 
         #region Constructor
 
@@ -58,33 +69,97 @@ namespace Pacman_IA.GameObjects
 
         public override void Update()
         {
-            // Update which Animation/Movement
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                command = "left";
-                direction = new Vector2(-1, 0);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                command = "right";
-                direction = new Vector2(1, 0);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            {
-                command = "down";
-                direction = new Vector2(0, 1);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Up))
-            {
-                command = "up";
-                direction = new Vector2(0, -1);
-            }
-            else
-            {
-                //command = "idle";
-                sprite.animationStop();
-                direction = Vector2.Zero;
-            }
+            bool down = false;
+
+            gridLocation = GameMap.getGridLocation(location)[0];
+
+            //if (!IsMoving() || IsMoving())
+            //{
+                // Update which Animation/Movement
+                KeyboardState state = Keyboard.GetState();
+
+
+
+                if (state.IsKeyDown(Keys.Left) && !toggleLeft)
+                {
+                    toggleLeft = true;
+                    moving = true;
+                    command = "left";
+                    direction = new Vector2(-1, 0);
+                    //if (!IsMoving())
+                    //deltaMove = 32;
+
+                    int lin = gridLocation.ToPoint().Y;
+                    int col = gridLocation.ToPoint().X - 1;
+                    destination = GameMap.posLevel[lin, col];
+                }
+                else if (state.IsKeyUp(Keys.Left) && toggleLeft)
+                {
+                    toggleLeft = false;
+                }
+                else if (state.IsKeyDown(Keys.Right) && !toggleRight)
+                {
+                    toggleRight = true;
+                    down = true;
+                    moving = true;
+                    command = "right";
+                    direction = new Vector2(1, 0);
+                    //if (!IsMoving())
+                    //deltaMove = 32;
+
+                    int lin = gridLocation.ToPoint().Y;
+                    int col = gridLocation.ToPoint().X + 1;
+                    destination = GameMap.posLevel[lin, col];
+                }
+                else if (state.IsKeyUp(Keys.Right) && toggleRight)
+                {
+                    toggleRight = false;
+                }
+                else if (state.IsKeyDown(Keys.Down) && !toggleDown)
+                {
+                    toggleDown = true;
+                    down = true;
+                    moving = true;
+                    command = "down";
+                    direction = new Vector2(0, 1);
+                    //if (!IsMoving())
+                    //deltaMove = 32;
+
+                    int lin = gridLocation.ToPoint().Y + 1;
+                    int col = gridLocation.ToPoint().X;
+                    destination = GameMap.posLevel[lin, col];
+
+                }
+                else if (state.IsKeyUp(Keys.Down) && toggleDown)
+                {
+                    toggleDown = false;
+                }
+                else if (state.IsKeyDown(Keys.Up) && !toggleUp)
+                {
+                    toggleUp = true;
+                    down = true;
+                    moving = true;
+                    command = "up";
+                    direction = new Vector2(0, -1);
+                    //if (!IsMoving())
+                    //deltaMove = 32;
+
+                    int lin = gridLocation.ToPoint().Y - 1;
+                    int col = gridLocation.ToPoint().X;
+                    destination = GameMap.posLevel[lin, col];
+                }
+                else if (state.IsKeyUp(Keys.Up) && toggleUp)
+                {
+                    toggleUp = false;
+                }
+                else if (!moving)
+                {
+                    //command = "idle";
+                    sprite.animationStop();
+                    direction = Vector2.Zero;
+                    deltaMove = 0;
+                }
+            //}
 
             base.Update();
         }

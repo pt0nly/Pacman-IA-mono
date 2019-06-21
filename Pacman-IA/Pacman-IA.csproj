@@ -57,6 +57,21 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Behaviour\ChaseAggressive.cs" />
+    <Compile Include="Behaviour\ChaseAmbush.cs" />
+    <Compile Include="Behaviour\ChaseBehaviour.cs" />
+    <Compile Include="Behaviour\ChaseRandom.cs" />
+    <Compile Include="Behaviour\EatBehaviour.cs" />
+    <Compile Include="Behaviour\FrightnedBehaviour.cs" />
+    <Compile Include="Behaviour\FrightnetWandering.cs" />
+    <Compile Include="Behaviour\HuntBehaviour.cs" />
+    <Compile Include="Behaviour\IChaseBehaviour.cs" />
+    <Compile Include="Behaviour\ChasePatrol.cs" />
+    <Compile Include="Behaviour\IEatBehaviour.cs" />
+    <Compile Include="Behaviour\IFrightnedBehaviour.cs" />
+    <Compile Include="Behaviour\IHuntBehaviour.cs" />
+    <Compile Include="Behaviour\IScatterBehaviour.cs" />
+    <Compile Include="Behaviour\ScatterBehaviour.cs" />
     <Compile Include="Classes\GameGraphics.cs" />
     <Compile Include="Classes\GameItem.cs" />
     <Compile Include="Classes\GameMap.cs" />
@@ -153,6 +168,7 @@
     <Content Include="Content\sprites\Pinky-Pink.png" />
     <Content Include="Content\textures\background.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
