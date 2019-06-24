@@ -5,8 +5,6 @@ namespace Pacman_IA.Classes
 {
     public static class GameVars
     {
-        public const float COLLISION_DISTANCE = 20.0f;
-
         public const int STARTING_LIVES = 3;
         public static bool Game_Loaded = false;
 
@@ -17,6 +15,21 @@ namespace Pacman_IA.Classes
         public static Clyde Clyde;
 
         public static GameTime gameTime;
+
+        public static string MSG1 = "";
+        public static string MSG2 = "";
+        public static string MSG3 = "";
+        public static string MSG4 = "";
+
+        public static class DIR
+        {
+            public static Vector2 LEFT = new Vector2(-1, 0);
+            public static Vector2 RIGHT = new Vector2(1, 0);
+            public static Vector2 DOWN = new Vector2(0, 1);
+            public static Vector2 UP = new Vector2(0, -1);
+
+            public static Vector2 INVALID = new Vector2(-1, -1);
+        }
 
         public enum WALL_TYPE
         {
@@ -83,6 +96,19 @@ namespace Pacman_IA.Classes
 
             CLYDE = 500,
             CLYDE_HOME = 510
+        }
+
+        public enum GHOST_MODE
+        {
+            CHASE,
+            SCATTER,
+            WANDER
+        }
+
+        public enum PACMAN_MODE
+        {
+            EAT,
+            HUNT
         }
 
     }

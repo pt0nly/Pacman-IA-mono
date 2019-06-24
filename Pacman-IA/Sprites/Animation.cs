@@ -21,6 +21,7 @@ namespace Pacman_IA.Sprites
         private int currentFrame;
         private bool loop;
         private bool playing;
+        private bool paused;
         private float speed;
         private float elapsedTime;
 
@@ -86,6 +87,7 @@ namespace Pacman_IA.Sprites
             this.speed = speed;
             this.currentFrame = this.startFrame;
             this.elapsedTime = 0.0f;
+            this.paused = false;
         }
 
         #endregion
@@ -94,6 +96,7 @@ namespace Pacman_IA.Sprites
         public void Start()
         {
             IsPlaying = true;
+            paused = false;
             currentFrame = startFrame;
             elapsedTime = 0.0f;
         }
@@ -101,6 +104,14 @@ namespace Pacman_IA.Sprites
         public void Stop()
         {
             IsPlaying = false;
+            paused = false;
+            currentFrame = startFrame;
+            elapsedTime = 0.0f;
+        }
+
+        public void Pause()
+        {
+            paused = true;
             currentFrame = startFrame;
             elapsedTime = 0.0f;
         }
@@ -112,7 +123,7 @@ namespace Pacman_IA.Sprites
                 // Check Elapsed time
                 elapsedTime += (float)GameVars.gameTime.ElapsedGameTime.TotalMilliseconds;
 
-                if (speed > 0.0f && elapsedTime >= speed)
+                if (!paused && speed > 0.0f && elapsedTime >= speed)
                 {
                     currentFrame++;
                     if (currentFrame >= endFrame)
@@ -124,9 +135,12 @@ namespace Pacman_IA.Sprites
                     elapsedTime = 0.0f;
                 }
 
-                srcRect = new Rectangle(width * CurrentColumn, height * CurrentRow, width, height);
-                tint = Color.White;
+                //srcRect = new Rectangle(width * CurrentColumn, height * CurrentRow, width, height);
+                //tint = Color.White;
             }
+
+            srcRect = new Rectangle(width * CurrentColumn, height * CurrentRow, width, height);
+            tint = Color.White;
         }
 
         public void Play(Vector2 location)

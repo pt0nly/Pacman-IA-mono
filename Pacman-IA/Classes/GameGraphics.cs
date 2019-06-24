@@ -18,6 +18,7 @@ namespace Pacman_IA.Classes
         private static ContentManager content;
         public static SpriteBatch spriteBatch;
         public static SpriteFont gameFont;
+        public static SpriteFont infoFont;
 
         private static Texture2D background;
         private static Rectangle mainFrame;
@@ -69,9 +70,10 @@ namespace Pacman_IA.Classes
             GameVars.Clyde = new Clyde(new Vector2(300, 500), "left");
 
             gameFont = Content.Load<SpriteFont>("gameFont");
+            infoFont = Content.Load<SpriteFont>("infoFont");
 
             // Load map content.
-            GameMap.LoadContent();
+            //GameMap.LoadContent();
         }
 
         public static void Update()

@@ -100,6 +100,14 @@ namespace Pacman_IA.Sprites
             previousAnimation = "";
         }
 
+        public void animationPause()
+        {
+            if (currentAnimation != "")
+            {
+                animations[currentAnimation].Pause();
+            }
+        }
+
         public void animationPlay(string animKey)
         {
             currentAnimation = animKey;

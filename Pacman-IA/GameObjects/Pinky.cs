@@ -8,9 +8,7 @@ namespace Pacman_IA.GameObjects
 {
     public class Pinky : Character
     {
-        private ChaseBehaviour chaseBehaviour;
-        private ScatterBehaviour scatterBehaviour;
-        private FrightnedBehaviour frightnedBehaviour;
+        private GhostBehaviour ghostBehaviour;
 
         protected override void LoadSprite()
         {
@@ -21,16 +19,10 @@ namespace Pacman_IA.GameObjects
             sprite.animationAdd("left", 4, 6, 260.0f);
             sprite.animationAdd("up", 6, 8, 260.0f);
 
-            Speed = new Vector2(60, 60);
+            Speed = new Vector2(64, 64);
             Speed = Vector2.Zero;
         }
 
-        protected override void InitBehaviour()
-        {
-            chaseBehaviour = new ChaseAmbush();
-            scatterBehaviour = new ScatterBehaviour();
-            frightnedBehaviour = new FrightnetWandering();
-        }
 
         #region Constructor
 
@@ -65,5 +57,21 @@ namespace Pacman_IA.GameObjects
         }
 
         #endregion
+
+
+        #region Behaviour
+
+        protected override void InitBehaviour()
+        {
+            ghostBehaviour = new GhostBehaviour(this, new ChaseAmbush(this), new ScatterBehaviour(this, homeLocation), new FrightnedBehaviour(this));
+        }
+
+        protected override void CheckBehaviour()
+        {
+            ghostBehaviour.Behave(lastDirection);
+        }
+
+        #endregion
+
     }
 }

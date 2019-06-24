@@ -20,6 +20,13 @@
 /processorParam:TextureFormat=Compressed
 /build:gameFont.spritefont
 
+#begin infoFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:infoFont.spritefont
+
 #begin sprites/Blinky-Red.png
 /importer:TextureImporter
 /processor:TextureProcessor

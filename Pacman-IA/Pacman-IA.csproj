@@ -63,14 +63,16 @@
     <Compile Include="Behaviour\ChaseRandom.cs" />
     <Compile Include="Behaviour\EatBehaviour.cs" />
     <Compile Include="Behaviour\FrightnedBehaviour.cs" />
-    <Compile Include="Behaviour\FrightnetWandering.cs" />
+    <Compile Include="Behaviour\GhostBehaviour.cs" />
     <Compile Include="Behaviour\HuntBehaviour.cs" />
+    <Compile Include="Behaviour\IBehaviour.cs" />
     <Compile Include="Behaviour\IChaseBehaviour.cs" />
     <Compile Include="Behaviour\ChasePatrol.cs" />
     <Compile Include="Behaviour\IEatBehaviour.cs" />
     <Compile Include="Behaviour\IFrightnedBehaviour.cs" />
     <Compile Include="Behaviour\IHuntBehaviour.cs" />
     <Compile Include="Behaviour\IScatterBehaviour.cs" />
+    <Compile Include="Behaviour\PacmanBehaviour.cs" />
     <Compile Include="Behaviour\ScatterBehaviour.cs" />
     <Compile Include="Classes\GameGraphics.cs" />
     <Compile Include="Classes\GameItem.cs" />

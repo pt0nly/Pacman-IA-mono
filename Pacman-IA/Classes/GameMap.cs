@@ -119,8 +119,8 @@ namespace Pacman_IA.Classes
             
             List<GameVars.MAP_ITEM>[,] level2 = new List<GameVars.MAP_ITEM>[,] {
                 {    WallOpenTopLeft,   WallHoriz,          WallHoriz,      WallHoriz,     WallHoriz,    WallOpenTop, WallHoriz,          WallHoriz, WallHoriz,      WallHoriz,      WallHoriz, WallHoriz,           WallHoriz, WallHoriz,    WallOpenTop,      WallHoriz,     WallHoriz,           WallHoriz,   WallHoriz,    WallOpenTopRight },
-                {           WallVert, PowerPellet,             Pellet,         Pellet,        Pellet,       WallVert,    Pellet,             Pellet,    Pellet,         Pellet,         Pellet,    Pellet,              Pellet,    Pellet,       WallVert,         Pellet,        Pellet,              Pellet,      Pellet,            WallVert },
-                {           WallVert,      Pellet,    WallOpenTopLeft, WallHorizRight,        Pellet, WallVertBottom,    Pellet,      WallHorizLeft, WallHoriz,      WallHoriz,      WallHoriz, WallHoriz,      WallHorizRight,    Pellet, WallVertBottom,         Pellet, WallHorizLeft,    WallOpenTopRight,      Pellet,            WallVert },
+                {           new List<GameVars.MAP_ITEM> {GameVars.MAP_ITEM.WALL_VERT, GameVars.MAP_ITEM.PINKY_HOME}, PowerPellet,             Pellet,         Pellet,        Pellet,       WallVert,    Pellet,             Pellet,    Pellet,         Pellet,         Pellet,    Pellet,              Pellet,    Pellet,       WallVert,         Pellet,        Pellet,              Pellet,      Pellet,            WallVert },
+                {           WallVert,      Pellet,    WallOpenTopLeft, WallHorizRight,        Pellet, WallVertBottom,    Pellet,      WallHorizLeft, WallHoriz,      WallHoriz,      WallHoriz, WallHoriz,      WallHorizRight,    Pellet, WallVertBottom,         Pellet, WallHorizLeft,    WallOpenTopRight,      Pellet,            new List<GameVars.MAP_ITEM> {GameVars.MAP_ITEM.WALL_VERT, GameVars.MAP_ITEM.BLINKY_HOME } },
                 {           WallVert,      Pellet,           WallVert,         Pellet,        Pellet,         Pellet,    Pellet,             Pellet,    Pellet,         Pellet,         Pellet,    Pellet,              Pellet,    Pellet,         Pellet,         Pellet,        Pellet,            WallVert,      Pellet,            WallVert },
                 {           WallVert,      Pellet,     WallVertBottom,         Pellet, WallHorizLeft, WallHorizRight,    Pellet,    WallOpenTopLeft, WallHoriz, new List<GameVars.MAP_ITEM> { GameVars.MAP_ITEM.WALL_HORIZ, GameVars.MAP_ITEM.DOOR }, new List<GameVars.MAP_ITEM> { GameVars.MAP_ITEM.WALL_HORIZ, GameVars.MAP_ITEM.DOOR }, WallHoriz,    WallOpenTopRight,    Pellet,  WallHorizLeft, WallHorizRight,        Pellet,      WallVertBottom,      Pellet,            WallVert },
                 {           WallVert,      Pellet,             Pellet,         Pellet,        Pellet,         Pellet,    Pellet,           WallVert,    Blinky,          Pinky,           Inky,     Clyde,            WallVert,    Pellet,         Pellet,         Pellet,        Pellet,              Pellet,      Pellet,            WallVert },
@@ -130,7 +130,7 @@ namespace Pacman_IA.Classes
                 {           WallVert,      Pellet,           WallVert,         Pellet,        Pellet,         Pellet,    Pellet,              Empty,     Empty,          Empty,         Pacman,     Empty,               Empty,    Pellet,         Pellet,         Pellet,        Pellet,            WallVert,      Pellet,            WallVert },
 
                 {           WallVert,      Pellet, WallOpenBottomLeft, WallHorizRight,        Pellet,    WallVertTop,    Pellet,      WallHorizLeft, WallHoriz,      WallHoriz,      WallHoriz, WallHoriz,      WallHorizRight,    Pellet,    WallVertTop,         Pellet, WallHorizLeft, WallOpenBottomRight,      Pellet,            WallVert },
-                {           WallVert,      Pellet,             Pellet,         Pellet,        Pellet,       WallVert,    Pellet,             Pellet,    Pellet,         Pellet,         Pellet,    Pellet,              Pellet,    Pellet,       WallVert,         Pellet,        Pellet,              Pellet, PowerPellet,            WallVert },
+                {           WallVert,      new List<GameVars.MAP_ITEM> {GameVars.MAP_ITEM.PELLET, GameVars.MAP_ITEM.CLYDE_HOME },             Pellet,         Pellet,        Pellet,       WallVert,    Pellet,             Pellet,    Pellet,         Pellet,         Pellet,    Pellet,              Pellet,    Pellet,       WallVert,         Pellet,        Pellet,              Pellet, PowerPellet,            new List<GameVars.MAP_ITEM> {GameVars.MAP_ITEM.WALL_VERT, GameVars.MAP_ITEM.INKY_HOME } },
                 { WallOpenBottomLeft,   WallHoriz,          WallHoriz,      WallHoriz,     WallHoriz, WallOpenBottom, WallHoriz,          WallHoriz, WallHoriz,      WallHoriz,      WallHoriz, WallHoriz,           WallHoriz, WallHoriz, WallOpenBottom,      WallHoriz,     WallHoriz,           WallHoriz,   WallHoriz, WallOpenBottomRight },
             };
 
@@ -183,22 +183,27 @@ namespace Pacman_IA.Classes
         {
             // Pacman Reset
             GameVars.Pacman.Location = Vector2.Zero;
+            GameVars.Pacman.InSpawn = false;
 
             // Blinky Reset
             GameVars.Blinky.Location = Vector2.Zero;
             GameVars.Blinky.HomeLocation = Vector2.Zero;
+            GameVars.Blinky.InSpawn = true;
 
             // Pinky Reset
             GameVars.Pinky.Location = Vector2.Zero;
             GameVars.Pinky.HomeLocation = Vector2.Zero;
+            GameVars.Pinky.InSpawn = true;
 
             // Inky Reset
             GameVars.Inky.Location = Vector2.Zero;
             GameVars.Inky.HomeLocation = Vector2.Zero;
+            GameVars.Inky.InSpawn = true;
 
             // Clyde Reset
             GameVars.Clyde.Location = Vector2.Zero;
             GameVars.Clyde.HomeLocation = Vector2.Zero;
+            GameVars.Clyde.InSpawn = true;
 
             pelletLevel = new int[level.GetLength(0), level.GetLength(1)];
             wallLevel = new int[level.GetLength(0), level.GetLength(1)];
@@ -217,112 +222,122 @@ namespace Pacman_IA.Classes
                     pelletLevel[lin, col] = -1;
                     wallLevel[lin, col] = -1;
 
+
+
                     if (curItem.Contains(GameVars.MAP_ITEM.PACMAN))
                     {
-                        //GameVars.Pacman.Location = curLocation;
                         GameVars.Pacman.SetLocation(curLocation);
-                        //objLevel[lin, col] = GameVars.Pacman;
+                        curItem.Remove(GameVars.MAP_ITEM.PACMAN);
                     }
                     else if (curItem.Contains(GameVars.MAP_ITEM.BLINKY_HOME))
+                    {
                         GameVars.Blinky.HomeLocation = curLocation;
+                        curItem.Remove(GameVars.MAP_ITEM.BLINKY_HOME);
+                    }
                     else if (curItem.Contains(GameVars.MAP_ITEM.BLINKY))
                     {
-                        //GameVars.Blinky.Location = curLocation;
                         GameVars.Blinky.SetLocation(curLocation);
+                        curItem.Remove(GameVars.MAP_ITEM.BLINKY);
+
                         if (GameVars.Blinky.HomeLocation == Vector2.Zero)
                             GameVars.Blinky.HomeLocation = curLocation;
-
-                        //objLevel[lin, col] = GameVars.Blinky;
                     }
                     else if (curItem.Contains(GameVars.MAP_ITEM.PINKY_HOME))
+                    {
                         GameVars.Pinky.HomeLocation = curLocation;
+                        curItem.Remove(GameVars.MAP_ITEM.PINKY_HOME);
+                    }
                     else if (curItem.Contains(GameVars.MAP_ITEM.PINKY))
                     {
-                        //GameVars.Pinky.Location = curLocation;
                         GameVars.Pinky.SetLocation(curLocation);
+                        curItem.Remove(GameVars.MAP_ITEM.PINKY);
+
                         if (GameVars.Pinky.HomeLocation == Vector2.Zero)
                             GameVars.Pinky.HomeLocation = curLocation;
-
-                        //objLevel[lin, col] = GameVars.Pinky;
                     }
                     else if (curItem.Contains(GameVars.MAP_ITEM.INKY_HOME))
+                    {
                         GameVars.Inky.HomeLocation = curLocation;
+                        curItem.Remove(GameVars.MAP_ITEM.INKY_HOME);
+                    }
                     else if (curItem.Contains(GameVars.MAP_ITEM.INKY))
                     {
-                        //GameVars.Inky.Location = curLocation;
                         GameVars.Inky.SetLocation(curLocation);
+                        curItem.Remove(GameVars.MAP_ITEM.INKY);
+
                         if (GameVars.Inky.HomeLocation == Vector2.Zero)
                             GameVars.Inky.HomeLocation = curLocation;
-
-                        //objLevel[lin, col] = GameVars.Inky;
                     }
                     else if (curItem.Contains(GameVars.MAP_ITEM.CLYDE_HOME))
+                    {
                         GameVars.Clyde.HomeLocation = curLocation;
+                        curItem.Remove(GameVars.MAP_ITEM.CLYDE_HOME);
+                    }
                     else if (curItem.Contains(GameVars.MAP_ITEM.CLYDE))
                     {
-                        //GameVars.Clyde.Location = curLocation;
                         GameVars.Clyde.SetLocation(curLocation);
+                        curItem.Remove(GameVars.MAP_ITEM.CLYDE);
+
                         if (GameVars.Clyde.HomeLocation == Vector2.Zero)
                             GameVars.Clyde.HomeLocation = curLocation;
-
-                        //objLevel[lin, col] = GameVars.Clyde;
                     }
-                    else
+
+                    if (curItem.Count == 0)
+                        curItem.Add(GameVars.MAP_ITEM.EMPTY);
+
+                    int curFrame = 0;
+                    Sprite curSprite = new Sprite(texture, 3, 10);
+                    bool updateSprite = false;
+
+                    if (curItem.Contains(GameVars.MAP_ITEM.PELLET) || curItem.Contains(GameVars.MAP_ITEM.POWER_PELLET))
                     {
-                        int curFrame = 0;
-                        Sprite curSprite = new Sprite(texture, 3, 10);
+                        updateSprite = true;
 
-                        if (curItem.Contains(GameVars.MAP_ITEM.PELLET) || curItem.Contains(GameVars.MAP_ITEM.POWER_PELLET))
-                        {
-                            // This will be treated as Pellets/Power-Pellets
-                            GameVars.PELLET_TYPE pelletType = curItem.Contains(GameVars.MAP_ITEM.PELLET)
-                                                                ? GameVars.PELLET_TYPE.NORMAL
-                                                                : GameVars.PELLET_TYPE.POWER;
+                        // This will be treated as Pellets/Power-Pellets
+                        GameVars.PELLET_TYPE pelletType = curItem.Contains(GameVars.MAP_ITEM.PELLET)
+                                                            ? GameVars.PELLET_TYPE.NORMAL
+                                                            : GameVars.PELLET_TYPE.POWER;
 
-                            if (pelletType == GameVars.PELLET_TYPE.NORMAL)
-                                curFrame = (int)GameVars.MAP_ITEM.PELLET;
-                            else
-                                curFrame = (int)GameVars.MAP_ITEM.POWER_PELLET;
-                            curFrame--;
+                        if (pelletType == GameVars.PELLET_TYPE.NORMAL)
+                            curFrame = (int)GameVars.MAP_ITEM.PELLET;
+                        else
+                            curFrame = (int)GameVars.MAP_ITEM.POWER_PELLET;
+                        curFrame--;
 
-                            pellets.Add(new Pellet(curSprite, curLocation, curFrame, pelletType));
-                            //pelletLevel[lin, col] = pellets.Count - 1;
-                            
-                            //objLevel[lin, col] = new Pellet(curSprite, curLocation, curFrame, pelletType);
-                        }
-                        else if (curItem.Contains(GameVars.MAP_ITEM.DOOR))
-                        {
-                            // This will be treated as Wall-Door
-                            GameVars.WALL_TYPE wallType = GameVars.WALL_TYPE.DOOR;
-
-                            curItem.Remove(GameVars.MAP_ITEM.DOOR);
-                            curFrame = (int)curItem[0] - 1;
-
-                            curSprite.animationAdd("idle", curFrame, curFrame, false, 0.0f);
-
-                            walls.Add(new Wall(curSprite, curLocation, wallType));
-                            //objLevel[lin, col] = walls[walls.Count - 1];
-                            wallLevel[lin, col] = walls.Count - 1;
-
-                            //objLevel[lin, col] = new Wall(curSprite, curLocation, wallType);
-                        }
-                        else if (!curItem.Contains(GameVars.MAP_ITEM.EMPTY))
-                        {
-                            // This will be treated as Walls
-                            GameVars.WALL_TYPE wallType = GameVars.WALL_TYPE.NORMAL;
-                            curFrame = (int)curItem[0] - 1;
-
-                            curSprite.animationAdd("idle", curFrame, curFrame, false, 0.0f);
-
-                            walls.Add(new Wall(curSprite, curLocation, wallType));
-                            //objLevel[lin, col] = walls[walls.Count - 1];
-                            wallLevel[lin, col] = walls.Count - 1;
-
-                            //objLevel[lin, col] = new Wall(curSprite, curLocation, wallType);
-                        }
-
-                        tileSprite.Update(curFrame);
+                        pellets.Add(new Pellet(curSprite, curLocation, curFrame, pelletType));
+                        pelletLevel[lin, col] = (pelletType == GameVars.PELLET_TYPE.NORMAL ? 10 : 50);
                     }
+                    else if (curItem.Contains(GameVars.MAP_ITEM.DOOR))
+                    {
+                        updateSprite = true;
+
+                        // This will be treated as Wall/Door
+                        GameVars.WALL_TYPE wallType = GameVars.WALL_TYPE.DOOR;
+
+                        curItem.Remove(GameVars.MAP_ITEM.DOOR);
+                        curFrame = (int)curItem[0] - 1;
+
+                        curSprite.animationAdd("idle", curFrame, curFrame, false, 0.0f);
+
+                        walls.Add(new Wall(curSprite, curLocation, wallType));
+                        wallLevel[lin, col] = -2;
+                    }
+                    else if (!curItem.Contains(GameVars.MAP_ITEM.EMPTY))
+                    {
+                        updateSprite = true;
+
+                        // This will be treated as Walls
+                        GameVars.WALL_TYPE wallType = GameVars.WALL_TYPE.NORMAL;
+                        curFrame = (int)curItem[0] - 1;
+
+                        curSprite.animationAdd("idle", curFrame, curFrame, false, 0.0f);
+
+                        walls.Add(new Wall(curSprite, curLocation, wallType));
+                        wallLevel[lin, col] = walls.Count - 1;
+                    }
+
+                    if (updateSprite)
+                        tileSprite.Update(curFrame);
                 }
             }
         }
@@ -335,18 +350,6 @@ namespace Pacman_IA.Classes
                 tileSprite.animationPlay("idle");
             }
 
-            /*
-            foreach (var mapItem in objLevel)
-            {
-                if (mapItem != null)
-                {
-                    if (mapItem is Wall)
-                        ((Wall)mapItem).Update();
-                    else if (mapItem is Pellet)
-                        ((Pellet)mapItem).Update();
-                }
-            }
-            */
             foreach(var wall in walls)
             {
                 wall.Update();
@@ -361,19 +364,6 @@ namespace Pacman_IA.Classes
 
         public static void Draw()
         {
-            /*
-            foreach(var mapItem in objLevel)
-            {
-                if (mapItem != null)
-                {
-                    if (mapItem is Wall)
-                        ((Wall)mapItem).Draw();
-                    else if (mapItem is Pellet)
-                        ((Pellet)mapItem).Draw();
-                }
-            }
-            */
-
             foreach(var wall in walls)
             {
                 wall.Draw();

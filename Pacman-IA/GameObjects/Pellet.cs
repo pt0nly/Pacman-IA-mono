@@ -68,7 +68,13 @@ namespace Pacman_IA.GameObjects
             if (GameVars.Game_Loaded)
             {
                 if (this.innerRect.Intersects(GameVars.Pacman.InnerBound))
+                {
+                    Point posGridLoc = GameMap.getGridLocation(location)[0].ToPoint();
+
+                    GameMap.pelletLevel[posGridLoc.Y, posGridLoc.X] = -1;
+
                     removed = true;
+                }
                 else
                     sprite.animationPlay("idle");
             }

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Pacman_IA.Classes;
+using Pacman_IA.GameObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +11,18 @@ namespace Pacman_IA.Behaviour
 {
     public class ChasePatrol : ChaseBehaviour
     {
-        public ChasePatrol() : base()
-        {
+        private Vector2 pacmanLastPosition;
+        private bool pacmanLocated;
 
+        public ChasePatrol(Character person) : base(person)
+        {
+            pacmanLastPosition = GameVars.DIR.INVALID;
+            pacmanLocated = false;
         }
 
-        public void Chase()
+        protected override int checkChase(Point direction)
         {
-            throw new NotImplementedException();
+            return base.checkChase(direction);
         }
     }
 }

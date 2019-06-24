@@ -38,25 +38,13 @@ namespace Pacman_IA.GameObjects
             outerRect = new Rectangle(location.ToPoint(), new Point(32, 32));
         }
 
-        public bool Collided(object other)
+        public bool Collided(Character other)
         {
-            if (other is Pacman && this.outerRect.Intersects( ((Pacman)other).OuterBound) )
+            if (other is Pacman && this.outerRect.Intersects(other.OuterBound) )
             {
                 return true;
             }
-            else if (other is Blinky && this.outerRect.Intersects( ((Blinky)other).OuterBound) )
-            {
-                return true;
-            }
-            else if (other is Pinky && this.outerRect.Intersects(((Pinky)other).OuterBound))
-            {
-                return true;
-            }
-            else if (other is Inky && this.outerRect.Intersects(((Inky)other).OuterBound))
-            {
-                return true;
-            }
-            else if (other is Clyde && this.outerRect.Intersects(((Clyde)other).OuterBound))
+            else if (((other.InSpawn && type == GameVars.WALL_TYPE.NORMAL) || !other.InSpawn) && this.outerRect.Intersects(other.OuterBound))
             {
                 return true;
             }
@@ -79,7 +67,9 @@ namespace Pacman_IA.GameObjects
 
             int bw = 2;
 
-            /**
+            /**/
+            //if (this.type.Equals(GameVars.WALL_TYPE.DOOR))
+            {
             // Left
             GameGraphics.spriteBatch.Draw(t, new Rectangle(outerRect.Left, outerRect.Top, bw, outerRect.Height), Color.Red);
             // Right
@@ -88,6 +78,7 @@ namespace Pacman_IA.GameObjects
             GameGraphics.spriteBatch.Draw(t, new Rectangle(outerRect.Left, outerRect.Top, outerRect.Width, bw), Color.Red);
             // Bottom
             GameGraphics.spriteBatch.Draw(t, new Rectangle(outerRect.Left, outerRect.Bottom, outerRect.Width, bw), Color.Red);
+            }
             /**/
 
 
