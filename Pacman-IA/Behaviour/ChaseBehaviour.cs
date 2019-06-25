@@ -35,5 +35,10 @@ namespace Pacman_IA.Behaviour
 
             return retval;
         }
+
+        protected Vector2 ReverseDirection(Point direction)
+        {
+            return new Vector2(direction.X * -1, direction.Y * -1);
+        }
     }
 }

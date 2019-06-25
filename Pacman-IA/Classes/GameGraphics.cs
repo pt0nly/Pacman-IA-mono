@@ -71,9 +71,6 @@ namespace Pacman_IA.Classes
 
             gameFont = Content.Load<SpriteFont>("gameFont");
             infoFont = Content.Load<SpriteFont>("infoFont");
-
-            // Load map content.
-            //GameMap.LoadContent();
         }
 
         public static void Update()
@@ -107,11 +104,16 @@ namespace Pacman_IA.Classes
 
             GameMap.Draw();
 
-            GameVars.Pacman.Draw();
+            if (GameVars.Pacman.PowerUp <= 0.0f)
+                GameVars.Pacman.Draw();
+
             GameVars.Blinky.Draw();
             GameVars.Pinky.Draw();
             GameVars.Inky.Draw();
             GameVars.Clyde.Draw();
+
+            if (GameVars.Pacman.PowerUp > 0.0f)
+                GameVars.Pacman.Draw();
 
             spriteBatch.End();
         }

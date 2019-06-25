@@ -31,7 +31,7 @@ namespace Pacman_IA.Behaviour
         public void Behave(Vector2 lastDirection)
         {
             // Check if we can continue on this direction
-            if (lastDirection == Vector2.Zero)
+            if (lastDirection == GameVars.DIR.EMPTY)
             {
                 Random rndDir = new Random();
                 int choice = rndDir.Next(1, 4);
@@ -58,7 +58,7 @@ namespace Pacman_IA.Behaviour
                 }
             }
 
-            if (pacman.PowerUp > 0.0d)
+            if (pacman.PowerUp > 0.0f)
             {
                 // Energized
                 pacmanMode = GameVars.PACMAN_MODE.HUNT;

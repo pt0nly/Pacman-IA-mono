@@ -13,11 +13,15 @@ namespace Pacman_IA.Behaviour
     {
         private Vector2 pacmanLastPosition;
         private bool pacmanLocated;
+        private bool justLocated;
+        private Vector2 locationDirection;
 
         public ChaseAmbush(Character person) : base(person)
         {
             pacmanLastPosition = GameVars.DIR.INVALID;
             pacmanLocated = false;
+            justLocated = false;
+            locationDirection = GameVars.DIR.INVALID;
         }
 
         public override Dictionary<string, int> Chase(Vector2 lastDirection)
@@ -30,6 +34,7 @@ namespace Pacman_IA.Behaviour
                 if (ghost.GridLocation == pacmanLastPosition)
                 {
                     pacmanLocated = false;
+                    justLocated = false;
                 }
                 else
                 {
@@ -37,6 +42,46 @@ namespace Pacman_IA.Behaviour
                     ScatterBehaviour scatter = new ScatterBehaviour(ghost, pacmanLastPosition);
 
                     dirWeights = scatter.Scatter(lastDirection);
+
+                    if (justLocated)
+                    {
+                        justLocated = false;
+                        foreach(var weight in dirWeights)
+                        {
+                            if (weight.Key != "left" && locationDirection == GameVars.DIR.LEFT)
+                            {
+                                if (weight.Value > 0)
+                                {
+                                    dirWeights["left"] = -1;
+                                    break;
+                                }
+                            }
+                            else if (weight.Key != "right" && locationDirection == GameVars.DIR.RIGHT)
+                            {
+                                if (weight.Value > 0)
+                                {
+                                    dirWeights["right"] = -1;
+                                    break;
+                                }
+                            }
+                            else if (weight.Key != "down" && locationDirection == GameVars.DIR.DOWN)
+                            {
+                                if (weight.Value > 0)
+                                {
+                                    dirWeights["down"] = -1;
+                                    break;
+                                }
+                            }
+                            else if (weight.Key != "up" && locationDirection == GameVars.DIR.UP)
+                            {
+                                if (weight.Value > 0)
+                                {
+                                    dirWeights["up"] = -1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -104,6 +149,8 @@ namespace Pacman_IA.Behaviour
                                 // Pacman is not running in your direction
                                 // So we will try to ambush him
                                 pacmanLastPosition = posCheck;
+                                locationDirection = direction.ToVector2();
+                                justLocated = true;
                             }
                         }
 

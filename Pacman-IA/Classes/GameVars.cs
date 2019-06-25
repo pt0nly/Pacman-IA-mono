@@ -29,6 +29,7 @@ namespace Pacman_IA.Classes
             public static Vector2 UP = new Vector2(0, -1);
 
             public static Vector2 INVALID = new Vector2(-1, -1);
+            public static Vector2 EMPTY = Vector2.Zero;
         }
 
         public enum WALL_TYPE
@@ -93,6 +94,7 @@ namespace Pacman_IA.Classes
 
             INKY = 400,
             INKY_HOME = 410,
+            INKY_PATROL = 420,
 
             CLYDE = 500,
             CLYDE_HOME = 510

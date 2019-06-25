@@ -12,15 +12,27 @@ namespace Pacman_IA.GameObjects
 
         protected override void LoadSprite()
         {
-            sprite = new Sprite(GameGraphics.Content.Load<Texture2D>(@"sprites\Pinky-Pink"), 4, 2);
+            spriteNormal = new Sprite(GameGraphics.Content.Load<Texture2D>(@"sprites\Pinky-Pink"), 4, 2);
 
-            sprite.animationAdd("right", 0, 2, 260.0f);
-            sprite.animationAdd("down", 2, 4, 260.0f);
-            sprite.animationAdd("left", 4, 6, 260.0f);
-            sprite.animationAdd("up", 6, 8, 260.0f);
+            spriteNormal.animationAdd("right", 0, 2, 260.0f);
+            spriteNormal.animationAdd("down", 2, 4, 260.0f);
+            spriteNormal.animationAdd("left", 4, 6, 260.0f);
+            spriteNormal.animationAdd("up", 6, 8, 260.0f);
 
-            Speed = new Vector2(64, 64);
-            Speed = Vector2.Zero;
+            // Set the current sprite to Normal
+            sprite = spriteNormal;
+
+            normalSpeed = new Vector2(64);
+            Speed = normalSpeed;
+
+            // Scared Sprite
+            spriteScared = new Sprite(GameGraphics.Content.Load<Texture2D>(@"sprites\BlueGhost"), 3, 2);
+
+            spriteScared.animationAdd("run", 0, 2, 260.0f);
+            spriteScared.animationAdd("flash", 0, 4, 200.0f);
+            spriteScared.animationAdd("dead", 4, 6, 260.0f);
+
+            base.LoadSprite();
         }
 
 
@@ -64,6 +76,8 @@ namespace Pacman_IA.GameObjects
         protected override void InitBehaviour()
         {
             ghostBehaviour = new GhostBehaviour(this, new ChaseAmbush(this), new ScatterBehaviour(this, homeLocation), new FrightnedBehaviour(this));
+
+            base.InitBehaviour();
         }
 
         protected override void CheckBehaviour()

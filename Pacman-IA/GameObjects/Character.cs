@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Pacman_IA.Classes;
 using Pacman_IA.Sprites;
+using System.Collections.Generic;
 
 namespace Pacman_IA.GameObjects
 {
@@ -10,12 +10,19 @@ namespace Pacman_IA.GameObjects
     {
         protected string name;
         protected Sprite sprite;
+        protected Sprite spriteNormal;
+        protected Sprite spriteScared;
         protected Vector2 location;
         protected Vector2 homeLocation;
         protected Vector2 destination;
+        protected Vector2 spawnLocation;
+
+        protected List<Vector2> patrolLocation;
 
         protected string command;
         protected Vector2 speed;
+        protected Vector2 normalSpeed;
+        protected Vector2 scaredSpeed;
         protected Vector2 direction;
         protected Vector2 lastDirection;
 
@@ -29,6 +36,7 @@ namespace Pacman_IA.GameObjects
         protected Vector2 gridLocation;
         protected bool moving;
         protected bool collided;
+        protected bool okToBehave;
 
         protected bool toggleLeft;
         protected bool toggleRight;
@@ -44,6 +52,18 @@ namespace Pacman_IA.GameObjects
         public Vector2 Location {
             get { return location; }
             set { location = value; }
+        }
+
+        public Vector2 SpawnLocation
+        {
+            get { return spawnLocation; }
+            private set { spawnLocation = value; }
+        }
+
+        public List<Vector2> PatrolLocation
+        {
+            get { return patrolLocation; }
+            set { patrolLocation = value; }
         }
 
         public bool InSpawn
@@ -84,7 +104,27 @@ namespace Pacman_IA.GameObjects
             set { lastDirection = value; }
         }
 
-        public Vector2 Speed { set { speed = value; } }
+        public Vector2 Speed {
+            get { return speed; }
+            set { speed = value; }
+        }
+        public Vector2 SpeedNormal { get { return normalSpeed; } }
+        public Vector2 SpeedScared { get { return scaredSpeed; } }
+
+        public Sprite CurrSprite
+        {
+            get { return sprite; }
+            set { sprite = value; }
+        }
+
+        public Sprite SpriteNormal { get { return spriteNormal; } }
+        public Sprite SpriteScared { get { return spriteScared; } }
+
+        public bool OkToBehave
+        {
+            get { return okToBehave; }
+            set { okToBehave = value; }
+        }
 
         public Rectangle OuterBound { get { return outerRect; } }
         public Rectangle InnerBound { get { return innerRect; } }
@@ -94,22 +134,18 @@ namespace Pacman_IA.GameObjects
         public void SetLocation(Vector2 newLocation)
         {
             location = newLocation;
+            spawnLocation = newLocation;
             calculateBoundaries();
         }
 
         protected virtual void LoadSprite()
         {
-            sprite = new Sprite(GameGraphics.Content.Load<Texture2D>(@"sprites\ExtraGhost-Purple"), 4, 2);
-
-            sprite.animationAdd("right", 0, 2, 100.0f);
-            sprite.animationAdd("down", 2, 4, 100.0f);
-            sprite.animationAdd("left", 4, 6, 100.0f);
-            sprite.animationAdd("up", 6, 8, 100.0f);
+            scaredSpeed = new Vector2(40);
         }
 
         protected virtual void InitBehaviour()
         {
-
+            okToBehave = true;
         }
 
         public bool IsMoving
@@ -130,6 +166,7 @@ namespace Pacman_IA.GameObjects
 
             Location = location;
             HomeLocation = Vector2.Zero;
+            patrolLocation = new List<Vector2>();
             speed = new Vector2(150, 150);
             direction = Vector2.Zero;
             deltaMove = 0;
@@ -147,16 +184,9 @@ namespace Pacman_IA.GameObjects
 
             command = startCommand;
 
-            /*
-            if (command == "left")
-                direction = new Vector2(-1, 0);
-            else if (command == "right")
-                direction = new Vector2(1, 0);
-            else if (command == "up")
-                direction = new Vector2(0, -1);
-            else if (command == "down")
-                direction = new Vector2(0, 1);
-            */
+            sprite = null;
+            spriteNormal = null;
+            spriteScared = null;
 
             LoadSprite();
 
@@ -167,19 +197,22 @@ namespace Pacman_IA.GameObjects
 
         protected void calculateBoundaries()
         {
+            int width = sprite != null ? sprite.Width : 32;
+            int height = sprite != null ? sprite.Height : 32;
+
             // Find center point
             Point center = location.ToPoint();
             Point outerPt = location.ToPoint();
 
             // Calculate innerRect location and size
-            center.X += ((sprite.Width / 2) - 14);
-            center.Y += ((sprite.Height / 2) - 14);
+            center.X += ((width / 2) - 14);
+            center.Y += ((height / 2) - 14);
 
             outerPt.X += 2;
             outerPt.Y += 2;
 
             innerRect = new Rectangle(center, new Point(26));
-            outerRect = new Rectangle(outerPt, new Point(sprite.Width-4));
+            outerRect = new Rectangle(location.ToPoint(), new Point(width));
         }
 
         #region Constructor
@@ -220,9 +253,16 @@ namespace Pacman_IA.GameObjects
         {
         }
 
-        public void MoveLeft()
+        public virtual void MoveLeft()
         {
-            command = "left";
+            if (!(this is Pacman) && GameVars.Pacman.PowerUp > 0.0f)
+                if (GameVars.Pacman.PowerUp <= 3.0f)
+                    command = "flash";
+                else
+                    command = "run";
+            else
+                command = "left";
+
             direction = GameVars.DIR.LEFT;
 
             Move();
@@ -230,7 +270,14 @@ namespace Pacman_IA.GameObjects
 
         public void MoveRight()
         {
-            command = "right";
+            if (!(this is Pacman) && GameVars.Pacman.PowerUp > 0.0f)
+                if (GameVars.Pacman.PowerUp <= 3.0f)
+                    command = "flash";
+                else
+                    command = "run";
+            else
+                command = "right";
+
             direction = GameVars.DIR.RIGHT;
 
             Move();
@@ -238,7 +285,14 @@ namespace Pacman_IA.GameObjects
 
         public void MoveUp()
         {
-            command = "up";
+            if (!(this is Pacman) && GameVars.Pacman.PowerUp > 0.0f)
+                if (GameVars.Pacman.PowerUp <= 3.0f)
+                    command = "flash";
+                else
+                    command = "run";
+            else
+                command = "up";
+
             direction = GameVars.DIR.UP;
 
             Move();
@@ -246,7 +300,14 @@ namespace Pacman_IA.GameObjects
 
         public void MoveDown()
         {
-            command = "down";
+            if (!(this is Pacman) && GameVars.Pacman.PowerUp > 0.0f)
+                if (GameVars.Pacman.PowerUp <= 3.0f)
+                    command = "flash";
+                else
+                    command = "run";
+            else
+                command = "down";
+
             direction = GameVars.DIR.DOWN;
 
             Move();
@@ -254,14 +315,15 @@ namespace Pacman_IA.GameObjects
 
         private void Move()
         {
-            int lin = GridLocation.ToPoint().Y;
-            int col = GridLocation.ToPoint().X;
-
+            Point tmpLocation = gridLocation.ToPoint();
+            
             moving = true;
             lastDirection = direction;
 
             // Set destination
-            Destination = GameMap.posLevel[lin + direction.ToPoint().Y, col + direction.ToPoint().X];
+            Destination = GameMap.posLevel[tmpLocation.Y + direction.ToPoint().Y, tmpLocation.X + direction.ToPoint().X];
+
+            okToBehave = false;
         }
 
         public virtual void Update()
@@ -331,6 +393,7 @@ namespace Pacman_IA.GameObjects
                     innerRect.Location = new Point(location.ToPoint().X, location.ToPoint().Y - 1);
                     outerRect.Location = new Point(location.ToPoint().X, location.ToPoint().Y - 1);
                 }
+                okToBehave = true;
             }
 
             /**/
@@ -349,6 +412,7 @@ namespace Pacman_IA.GameObjects
                     innerRect.Location = prevInnerLocation;
                     outerRect.Location = prevOuterLocation;
                 }
+                okToBehave = true;
 
                 /*
                 if (this is Pacman)
@@ -464,7 +528,7 @@ namespace Pacman_IA.GameObjects
             t.SetData(new[] { Color.White });
 
             int bw = 2;
-            /**/
+            /**
             // Left
             GameGraphics.spriteBatch.Draw(t, new Rectangle(innerRect.Left, innerRect.Top, bw, innerRect.Height), Color.Blue);
             // Right
@@ -475,7 +539,7 @@ namespace Pacman_IA.GameObjects
             GameGraphics.spriteBatch.Draw(t, new Rectangle(innerRect.Left, innerRect.Bottom, innerRect.Width, bw), Color.Blue);
             /**/
 
-            /**/
+            /**
             // Left
             GameGraphics.spriteBatch.Draw(t, new Rectangle(outerRect.Left, outerRect.Top, bw, outerRect.Height), Color.Green);
             // Right
@@ -496,15 +560,15 @@ namespace Pacman_IA.GameObjects
             Color cor = Color.White;
             Vector2 centerPosition = Vector2.Zero;
 
-                menuMessage = "Grid: " + gridLocation.ToString();
-                menuMessage1 = "Dir: " + direction.ToString();
-                menuMessage2 = "Loc: " + location.ToString();
-                menuMessage3 = "Dest: " + destination.ToString();
-                menuMessage4 = "Home: " + GameMap.getGridLocation(homeLocation)[0].ToString();
-                menuMessage5 = "Moving: " + IsMoving.ToString();
-                menuMessage6 = "Collided: " + collided.ToString();
+            menuMessage = "Grid: " + gridLocation.ToString();
+            menuMessage1 = "Dir: " + direction.ToString();
+            menuMessage2 = "Loc: " + location.ToString();
+            menuMessage3 = "Dest: " + destination.ToString();
+            menuMessage4 = "Home: " + GameMap.getGridLocation(homeLocation)[0].ToString();
+            menuMessage5 = "Ok To Behave: " + OkToBehave.ToString();
+            menuMessage6 = "Collided: " + collided.ToString();
 
-                cor = Color.Red;
+            cor = Color.Red;
 
             float y1 = 346;
             float y2 = 476;
@@ -514,7 +578,7 @@ namespace Pacman_IA.GameObjects
 
             if (this is Pacman)
             {
-                menuMessage4 = "";
+                menuMessage4 = "PowerUp: " + ((Pacman)this).PowerUp.ToString();
                 centerPosition = new Vector2(x3, y1);
                 cor = Color.Yellow;
             }
@@ -522,21 +586,25 @@ namespace Pacman_IA.GameObjects
             {
                 centerPosition = new Vector2(x2, y1);
                 cor = Color.Red;
+                menuMessage6 = "Speed: " + speed.ToString();
             }
             else if (this is Pinky)
             {
                 centerPosition = new Vector2(x1, y1);
                 cor = Color.Purple;
+                menuMessage6 = "Speed: " + speed.ToString();
             }
             else if (this is Inky)
             {
                 centerPosition = new Vector2(x2, y2);
                 cor = Color.Cyan;
+                menuMessage6 = "Speed: " + speed.ToString();
             }
             else if (this is Clyde)
             {
                 centerPosition = new Vector2(x1, y2);
                 cor = Color.Orange;
+                menuMessage6 = "Speed: " + speed.ToString();
             }
 
             float yStep = 16;

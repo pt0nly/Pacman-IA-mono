@@ -67,7 +67,7 @@ namespace Pacman_IA.GameObjects
 
             int bw = 2;
 
-            /**/
+            /**
             //if (this.type.Equals(GameVars.WALL_TYPE.DOOR))
             {
             // Left

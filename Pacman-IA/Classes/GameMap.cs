@@ -121,13 +121,13 @@ namespace Pacman_IA.Classes
                 {    WallOpenTopLeft,   WallHoriz,          WallHoriz,      WallHoriz,     WallHoriz,    WallOpenTop, WallHoriz,          WallHoriz, WallHoriz,      WallHoriz,      WallHoriz, WallHoriz,           WallHoriz, WallHoriz,    WallOpenTop,      WallHoriz,     WallHoriz,           WallHoriz,   WallHoriz,    WallOpenTopRight },
                 {           new List<GameVars.MAP_ITEM> {GameVars.MAP_ITEM.WALL_VERT, GameVars.MAP_ITEM.PINKY_HOME}, PowerPellet,             Pellet,         Pellet,        Pellet,       WallVert,    Pellet,             Pellet,    Pellet,         Pellet,         Pellet,    Pellet,              Pellet,    Pellet,       WallVert,         Pellet,        Pellet,              Pellet,      Pellet,            WallVert },
                 {           WallVert,      Pellet,    WallOpenTopLeft, WallHorizRight,        Pellet, WallVertBottom,    Pellet,      WallHorizLeft, WallHoriz,      WallHoriz,      WallHoriz, WallHoriz,      WallHorizRight,    Pellet, WallVertBottom,         Pellet, WallHorizLeft,    WallOpenTopRight,      Pellet,            new List<GameVars.MAP_ITEM> {GameVars.MAP_ITEM.WALL_VERT, GameVars.MAP_ITEM.BLINKY_HOME } },
-                {           WallVert,      Pellet,           WallVert,         Pellet,        Pellet,         Pellet,    Pellet,             Pellet,    Pellet,         Pellet,         Pellet,    Pellet,              Pellet,    Pellet,         Pellet,         Pellet,        Pellet,            WallVert,      Pellet,            WallVert },
+                {           WallVert,      Pellet,           WallVert,         Pellet,        Pellet,         Pellet,    new List<GameVars.MAP_ITEM> { GameVars.MAP_ITEM.PELLET, GameVars.MAP_ITEM.INKY_PATROL },             Pellet,    Pellet,         Pellet,         Pellet,    Pellet,              Pellet,    Pellet,         Pellet,         Pellet,        new List<GameVars.MAP_ITEM> { GameVars.MAP_ITEM.PELLET, GameVars.MAP_ITEM.INKY_PATROL },            WallVert,      Pellet,            WallVert },
                 {           WallVert,      Pellet,     WallVertBottom,         Pellet, WallHorizLeft, WallHorizRight,    Pellet,    WallOpenTopLeft, WallHoriz, new List<GameVars.MAP_ITEM> { GameVars.MAP_ITEM.WALL_HORIZ, GameVars.MAP_ITEM.DOOR }, new List<GameVars.MAP_ITEM> { GameVars.MAP_ITEM.WALL_HORIZ, GameVars.MAP_ITEM.DOOR }, WallHoriz,    WallOpenTopRight,    Pellet,  WallHorizLeft, WallHorizRight,        Pellet,      WallVertBottom,      Pellet,            WallVert },
                 {           WallVert,      Pellet,             Pellet,         Pellet,        Pellet,         Pellet,    Pellet,           WallVert,    Blinky,          Pinky,           Inky,     Clyde,            WallVert,    Pellet,         Pellet,         Pellet,        Pellet,              Pellet,      Pellet,            WallVert },
 
                 {           WallVert,      Pellet,        WallVertTop,         Pellet, WallHorizLeft, WallHorizRight,    Pellet, WallOpenBottomLeft, WallHoriz,      WallHoriz,      WallHoriz, WallHoriz, WallOpenBottomRight,    Pellet,  WallHorizLeft, WallHorizRight,        Pellet,         WallVertTop,      Pellet,            WallVert },
 
-                {           WallVert,      Pellet,           WallVert,         Pellet,        Pellet,         Pellet,    Pellet,              Empty,     Empty,          Empty,         Pacman,     Empty,               Empty,    Pellet,         Pellet,         Pellet,        Pellet,            WallVert,      Pellet,            WallVert },
+                {           WallVert,      Pellet,           WallVert,         Pellet,        Pellet,         Pellet,    new List<GameVars.MAP_ITEM> { GameVars.MAP_ITEM.PELLET, GameVars.MAP_ITEM.INKY_PATROL },              Empty,     Empty,          Empty,         Pacman,     Empty,               Empty,    Pellet,         Pellet,         Pellet,        new List<GameVars.MAP_ITEM> { GameVars.MAP_ITEM.PELLET, GameVars.MAP_ITEM.INKY_PATROL },            WallVert,      Pellet,            WallVert },
 
                 {           WallVert,      Pellet, WallOpenBottomLeft, WallHorizRight,        Pellet,    WallVertTop,    Pellet,      WallHorizLeft, WallHoriz,      WallHoriz,      WallHoriz, WallHoriz,      WallHorizRight,    Pellet,    WallVertTop,         Pellet, WallHorizLeft, WallOpenBottomRight,      Pellet,            WallVert },
                 {           WallVert,      new List<GameVars.MAP_ITEM> {GameVars.MAP_ITEM.PELLET, GameVars.MAP_ITEM.CLYDE_HOME },             Pellet,         Pellet,        Pellet,       WallVert,    Pellet,             Pellet,    Pellet,         Pellet,         Pellet,    Pellet,              Pellet,    Pellet,       WallVert,         Pellet,        Pellet,              Pellet, PowerPellet,            new List<GameVars.MAP_ITEM> {GameVars.MAP_ITEM.WALL_VERT, GameVars.MAP_ITEM.INKY_HOME } },
@@ -267,6 +267,11 @@ namespace Pacman_IA.Classes
 
                         if (GameVars.Inky.HomeLocation == Vector2.Zero)
                             GameVars.Inky.HomeLocation = curLocation;
+                    }
+                    else if (curItem.Contains(GameVars.MAP_ITEM.INKY_PATROL))
+                    {
+                        GameVars.Inky.PatrolLocation.Add(curLocation);
+                        curItem.Remove(GameVars.MAP_ITEM.INKY_PATROL);
                     }
                     else if (curItem.Contains(GameVars.MAP_ITEM.CLYDE_HOME))
                     {

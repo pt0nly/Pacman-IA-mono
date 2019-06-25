@@ -77,6 +77,7 @@
     <Compile Include="Classes\GameGraphics.cs" />
     <Compile Include="Classes\GameItem.cs" />
     <Compile Include="Classes\GameMap.cs" />
+    <Compile Include="Classes\ScanLine.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Classes\GameVars.cs" />
     <Compile Include="GameObjects\Clyde.cs" />

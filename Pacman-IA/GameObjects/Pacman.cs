@@ -13,13 +13,13 @@ namespace Pacman_IA.GameObjects
     {
         private PacmanBehaviour pacmanBehaviour;
 
-        private const double POWERUP_TIME = 10.0d; // 10 Seconds of PowerUp
-        private double PowerUpTime = 0.0d; // Time left for PowerUp
+        private const float POWERUP_TIME = 10.0f; // 10 Seconds of PowerUp
+        private float PowerUpTime = 0.0f; // Time left for PowerUp
 
 
         #region Properties
 
-        public double PowerUp
+        public float PowerUp
         {
             get { return PowerUpTime; }
         }
@@ -35,7 +35,8 @@ namespace Pacman_IA.GameObjects
             sprite.animationAdd("left", 4, 6, 260.0f);
             sprite.animationAdd("up", 6, 8, 260.0f);
 
-            Speed = new Vector2(55);
+            normalSpeed = new Vector2(55);
+            Speed = normalSpeed;
         }
 
 
@@ -76,21 +77,46 @@ namespace Pacman_IA.GameObjects
 
         #region Behaviour
 
+        public void StartPowerUpTime()
+        {
+            PowerUpTime = POWERUP_TIME;
+        }
+
+        private void CheckPowerUpTime()
+        {
+            // Check Elapsed time
+            if (PowerUpTime > 0.0f)
+            {
+                PowerUpTime -= (float)(GameVars.gameTime.ElapsedGameTime.TotalMilliseconds / 1000);
+
+                if (PowerUpTime < 0.0f)
+                    PowerUpTime = 0.0f;
+            }
+        }
+
         protected override void InitBehaviour()
         {
             pacmanBehaviour = new PacmanBehaviour(this, new EatBehaviour(this), new HuntBehaviour(this));
+
+            base.InitBehaviour();
         }
 
         protected override void CheckBehaviour()
         {
-            pacmanBehaviour.Behave(lastDirection);
+            if (okToBehave)
+            {
+                pacmanBehaviour.Behave(lastDirection);
+            }
         }
 
         #endregion
-
-        /*
+        private bool toggleF1 = false;
+        private bool toggleF2 = false;
+        /**/
         public override void Update()
         {
+            CheckPowerUpTime();
+
             gridLocation = GameMap.getGridLocation(location)[0];
 
             // Update which Animation/Movement
@@ -99,6 +125,7 @@ namespace Pacman_IA.GameObjects
             if (state.IsKeyDown(Keys.Left) && !toggleLeft)
             {
                 toggleLeft = true;
+                /*
                 moving = true;
                 command = "left";
                 direction = new Vector2(-1, 0);
@@ -107,14 +134,39 @@ namespace Pacman_IA.GameObjects
                 int lin = gridLocation.ToPoint().Y;
                 int col = gridLocation.ToPoint().X - 1;
                 destination = GameMap.posLevel[lin, col];
+                /**/
+
+                MoveLeft();
             }
             else if (state.IsKeyUp(Keys.Left) && toggleLeft)
             {
                 toggleLeft = false;
             }
+
+            else if (state.IsKeyDown(Keys.F1) && !toggleF1)
+            {
+                toggleF1 = true;
+                okToBehave = true;
+            }
+            else if (state.IsKeyUp(Keys.F1) && toggleF1)
+            {
+                toggleF1 = false;
+            }
+
+            else if (state.IsKeyDown(Keys.F2) && !toggleF2)
+            {
+                toggleF2 = true;
+                okToBehave = false;
+            }
+            else if (state.IsKeyUp(Keys.F2) && toggleF2)
+            {
+                toggleF2 = false;
+            }
+
             else if (state.IsKeyDown(Keys.Right) && !toggleRight)
             {
                 toggleRight = true;
+                /*
                 moving = true;
                 command = "right";
                 direction = new Vector2(1, 0);
@@ -123,6 +175,9 @@ namespace Pacman_IA.GameObjects
                 int lin = gridLocation.ToPoint().Y;
                 int col = gridLocation.ToPoint().X + 1;
                 destination = GameMap.posLevel[lin, col];
+                /**/
+
+                MoveRight();
             }
             else if (state.IsKeyUp(Keys.Right) && toggleRight)
             {
@@ -131,6 +186,7 @@ namespace Pacman_IA.GameObjects
             else if (state.IsKeyDown(Keys.Down) && !toggleDown)
             {
                 toggleDown = true;
+                /*
                 moving = true;
                 command = "down";
                 direction = new Vector2(0, 1);
@@ -139,6 +195,9 @@ namespace Pacman_IA.GameObjects
                 int lin = gridLocation.ToPoint().Y + 1;
                 int col = gridLocation.ToPoint().X;
                 destination = GameMap.posLevel[lin, col];
+                /**/
+
+                MoveDown();
 
             }
             else if (state.IsKeyUp(Keys.Down) && toggleDown)
@@ -148,6 +207,7 @@ namespace Pacman_IA.GameObjects
             else if (state.IsKeyDown(Keys.Up) && !toggleUp)
             {
                 toggleUp = true;
+                /*
                 moving = true;
                 command = "up";
                 direction = new Vector2(0, -1);
@@ -156,6 +216,9 @@ namespace Pacman_IA.GameObjects
                 int lin = gridLocation.ToPoint().Y - 1;
                 int col = gridLocation.ToPoint().X;
                 destination = GameMap.posLevel[lin, col];
+                /**/
+
+                MoveUp();
             }
             else if (state.IsKeyUp(Keys.Up) && toggleUp)
             {
