@@ -15,13 +15,23 @@ namespace Pacman_IA.Behaviour
         private GameVars.GHOST_MODE ghostMode;
         private byte wave;
         private byte waveMode;
-        private float timer;
 
         private ChaseBehaviour chaseBehaviour = null;
         private ScatterBehaviour scatterBehaviour = null;
         private FrightnedBehaviour wanderBehaviour = null;
 
         private Vector2 lstDirection;
+
+
+        #region Properties
+
+        public GameVars.GHOST_MODE GhostMode
+        {
+            get { return ghostMode; }
+        }
+
+        #endregion
+
 
         public GhostBehaviour(Character person, ChaseBehaviour chase, ScatterBehaviour scatter, FrightnedBehaviour wander)
         {
@@ -34,11 +44,12 @@ namespace Pacman_IA.Behaviour
 
             lstDirection = GameVars.DIR.EMPTY;
 
-            ghostMode = GameVars.GHOST_MODE.CHASE;
+            // Initiates on Scatter mode
+            ghostMode = GameVars.GHOST_MODE.SCATTER;
 
             wave = 1;
             waveMode = 1;
-            timer = 0;
+            //ghost.Timer = 0.0f;
         }
 
         private string ConfirmDirections(Dictionary<string, int> dirWeights, bool firstRun)
@@ -52,86 +63,51 @@ namespace Pacman_IA.Behaviour
                 {
                     // Going LEFT
                     if (dirWeights["left"] < 0)
-                    {
                         dirWeights.Remove("left");
-                    }
+
                     if (dirWeights["down"] < 0)
-                    {
                         dirWeights.Remove("down");
-                    }
+
                     if (dirWeights["up"] < 0)
-                    {
                         dirWeights.Remove("up");
-                    }
                 }
                 else if (lstDirection == GameVars.DIR.RIGHT)
                 {
                     // Going RIGHT
                     if (dirWeights["right"] < 0)
-                    {
                         dirWeights.Remove("right");
-                    }
+
                     if (dirWeights["down"] < 0)
-                    {
                         dirWeights.Remove("down");
-                    }
+
                     if (dirWeights["up"] < 0)
-                    {
                         dirWeights.Remove("up");
-                    }
                 }
                 else if (lstDirection == GameVars.DIR.DOWN)
                 {
                     // Going DOWN
                     if (dirWeights["down"] < 0)
-                    {
                         dirWeights.Remove("down");
-                    }
+
                     if (dirWeights["left"] < 0)
-                    {
                         dirWeights.Remove("left");
-                    }
+
                     if (dirWeights["right"] < 0)
-                    {
                         dirWeights.Remove("right");
-                    }
                 }
                 else
                 {
                     // Going UP
                     if (dirWeights["up"] < 0)
-                    {
                         dirWeights.Remove("up");
-                    }
+
                     if (dirWeights["left"] < 0)
-                    {
                         dirWeights.Remove("left");
-                    }
+
                     if (dirWeights["right"] < 0)
-                    {
                         dirWeights.Remove("right");
-                    }
                 }
             }
-
-            /*
-            if (dirWeights["left"] < 0) //|| (lstDirection == GameVars.DIR.RIGHT && !firstRun))
-            {
-                dirWeights.Remove("left");
-            }
-            if (dirWeights["right"] < 0 //|| (lstDirection == GameVars.DIR.LEFT && !firstRun))
-            {
-                dirWeights.Remove("right");
-            }
-            if (dirWeights["down"] < 0 //|| (lstDirection == GameVars.DIR.UP && !firstRun))
-            {
-                dirWeights.Remove("down");
-            }
-            if (dirWeights["up"] < 0 //|| (lstDirection == GameVars.DIR.DOWN && !firstRun))
-            {
-                dirWeights.Remove("up");
-            }
-            /**/
 
             if (lstDirection == GameVars.DIR.LEFT)
             {
@@ -139,25 +115,13 @@ namespace Pacman_IA.Behaviour
                 choice = "";
 
                 if (dirWeights.ContainsKey("left"))
-                {
-                    // Contains LEFT
                     choice = "left";
-                }
                 else if (dirWeights.ContainsKey("down"))
-                {
-                    // Contains DOWN
                     choice = "down";
-                }
                 else if (dirWeights.ContainsKey("up"))
-                {
-                    // Contains UP
                     choice = "up";
-                }
                 else if (dirWeights.ContainsKey("right"))
-                {
-                    // Contains RIGHT, but must not change direction unless blocked
                     choice = "right";
-                }
             }
             else if (lstDirection == GameVars.DIR.RIGHT)
             {
@@ -165,25 +129,13 @@ namespace Pacman_IA.Behaviour
                 choice = "";
 
                 if (dirWeights.ContainsKey("right"))
-                {
-                    // Contains RIGHT
                     choice = "right";
-                }
                 else if (dirWeights.ContainsKey("up"))
-                {
-                    // Contains UP
                     choice = "up";
-                }
                 else if (dirWeights.ContainsKey("down"))
-                {
-                    // Contains DOWN
                     choice = "down";
-                }
                 else if (dirWeights.ContainsKey("left"))
-                {
-                    // Contains LEFT, but must not change direction unless blocked
                     choice = "left";
-                }
             }
             else if (lstDirection == GameVars.DIR.UP)
             {
@@ -191,25 +143,13 @@ namespace Pacman_IA.Behaviour
                 choice = "";
 
                 if (dirWeights.ContainsKey("up"))
-                {
-                    // Contains UP
                     choice = "up";
-                }
                 else if (dirWeights.ContainsKey("left"))
-                {
-                    // Contains LEFT
                     choice = "left";
-                }
                 else if (dirWeights.ContainsKey("right"))
-                {
-                    // Contains RIGHT
                     choice = "right";
-                }
                 else if (dirWeights.ContainsKey("down"))
-                {
-                    // Contains DOWN, but must not reverse direction
                     choice = "down";
-                }
             }
             else
             {
@@ -217,25 +157,13 @@ namespace Pacman_IA.Behaviour
                 choice = "";
 
                 if (dirWeights.ContainsKey("down"))
-                {
-                    // Contains DOWN
                     choice = "down";
-                }
                 else if (dirWeights.ContainsKey("right"))
-                {
-                    // Contains RIGHT
                     choice = "right";
-                }
                 else if (dirWeights.ContainsKey("left"))
-                {
-                    // Contains LEFT
                     choice = "left";
-                }
                 else if (dirWeights.ContainsKey("up"))
-                {
-                    // Contains UP, but must not reverse direction
                     choice = "up";
-                }
             }
 
             // Check remaining direction weights
@@ -247,9 +175,7 @@ namespace Pacman_IA.Behaviour
                 if (weight.Key != choice)
                 {
                     if (weight.Value > dirWeights[choice])
-                    {
                         choice = weight.Key;
-                    }
                     else if (weight.Value == dirWeights[choice])
                     {
                         Random rnd = new Random();
@@ -301,69 +227,86 @@ namespace Pacman_IA.Behaviour
                 ghost.Speed = ghost.SpeedNormal;
                 ghost.CurrSprite = ghost.SpriteNormal;
 
+                if (wave <= 4)
+                {
+                    // Update timer
+                    ghost.Timer += (float)(GameVars.gameTime.ElapsedGameTime.TotalMilliseconds / 100);
+                }
+
                 if (wave <= 2)
                 {
                     if (waveMode == 1)
                     {
-                        if (timer <= 7) // Seconds
+                        if (ghost.Timer <= 7.0f) // Seconds
                         {
                             // Go to Scatter Mode
                             ghostMode = GameVars.GHOST_MODE.SCATTER;
                         }
                         else
                         {
+                            // Start second mode
                             waveMode = 2;
+                            ghost.Timer = 0.0f;
                         }
                     }
-                    else
+
+                    if (waveMode == 2)
                     {
-                        if (timer <= 20) // Seconds
+                        if (ghost.Timer <= 20.0f) // Seconds
                         {
                             // Go to Chase/Hunt Mode
                             ghostMode = GameVars.GHOST_MODE.CHASE;
                         }
                         else
                         {
+                            // Start second mode
                             wave++;
                             waveMode = 1;
+                            ghost.Timer = 0.0f;
                         }
                     }
                 }
-                else
+                
+                if (wave > 2 && wave <= 4)
                 {
-                    if (wave <= 4)
+                    if (waveMode == 1)
                     {
-                        if (waveMode == 1)
+                        if (ghost.Timer <= 5) // Seconds
                         {
-                            if (timer <= 5) // Seconds
-                            {
-                                // Go to Scatter Mode
-                                ghostMode = GameVars.GHOST_MODE.SCATTER;
-                            }
-                            else
-                            {
-                                waveMode = 2;
-                            }
+                            // Go to Scatter Mode
+                            ghostMode = GameVars.GHOST_MODE.SCATTER;
                         }
                         else
                         {
-                            if (timer <= 20) // Seconds
-                            {
-                                // Go to Chase/Hunt Mode
-                                ghostMode = GameVars.GHOST_MODE.CHASE;
-                            }
-                            else
-                            {
-                                wave++;
-                                waveMode = 1;
-                            }
+                            // Start second mode
+                            waveMode = 2;
+                            ghost.Timer = 0.0f;
                         }
                     }
-                    else
+                    
+                    if (waveMode == 2)
                     {
-                        // Go to Chase/Hunt Mode
-                        ghostMode = GameVars.GHOST_MODE.CHASE;
+                        if (ghost.Timer <= 20) // Seconds
+                        {
+                            // Go to Chase/Hunt Mode
+                            ghostMode = GameVars.GHOST_MODE.CHASE;
+                        }
+                        else
+                        {
+                            // Start second mode
+                            wave++;
+                            waveMode = 1;
+                            if (wave < 4)
+                                ghost.Timer = 0.0f;
+                        }
                     }
+                }
+
+                if (wave == 5)
+                {
+                    // Go to Chase/Hunt Mode
+                    ghostMode = GameVars.GHOST_MODE.CHASE;
+                    wave++;
                 }
             }
         }

@@ -10,6 +10,15 @@ namespace Pacman_IA.GameObjects
     {
         private GhostBehaviour ghostBehaviour;
 
+        #region Properties
+
+        public GameVars.GHOST_MODE GhostMode
+        {
+            get { return ghostBehaviour.GhostMode; }
+        }
+
+        #endregion
+
         protected override void LoadSprite()
         {
             // Normal Sprite

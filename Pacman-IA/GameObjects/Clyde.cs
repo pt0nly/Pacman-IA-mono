@@ -10,6 +10,15 @@ namespace Pacman_IA.GameObjects
     {
         private GhostBehaviour ghostBehaviour;
 
+        #region Properties
+
+        public GameVars.GHOST_MODE GhostMode
+        {
+            get { return ghostBehaviour.GhostMode; }
+        }
+
+        #endregion
+
         protected override void LoadSprite()
         {
             spriteNormal = new Sprite(GameGraphics.Content.Load<Texture2D>(@"sprites\Clyde-Orange"), 4, 2);

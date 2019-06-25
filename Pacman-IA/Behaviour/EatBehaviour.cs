@@ -19,7 +19,12 @@ namespace Pacman_IA.Behaviour
                 pac = (Pacman)person;
         }
 
-        private void ReverseDirection(Vector2 lastDirection)
+        private Vector2 ReverseDirection(Point direction)
+        {
+            return new Vector2(direction.X * -1, direction.Y * -1);
+        }
+
+        private void RevertDirection(Vector2 lastDirection)
         {
             Point reverseDir = new Point(lastDirection.ToPoint().Y * -1, lastDirection.ToPoint().X * -1);
             int lin = pac.GridLocation.ToPoint().Y;
@@ -52,15 +57,188 @@ namespace Pacman_IA.Behaviour
             }
         }
 
+        private string ConfirmDirections(Dictionary<string, int> dirWeights, Vector2 lastDirection)
+        {
+            string choice = "";
+
+            if (lastDirection == GameVars.DIR.LEFT)
+            {
+                // Going LEFT
+                if (dirWeights["left"] < 0)
+                {
+                    dirWeights.Remove("left");
+                }
+                if (dirWeights["down"] < 0)
+                {
+                    dirWeights.Remove("down");
+                }
+                if (dirWeights["up"] < 0)
+                {
+                    dirWeights.Remove("up");
+                }
+            }
+            else if (lastDirection == GameVars.DIR.RIGHT)
+            {
+                // Going RIGHT
+                if (dirWeights["right"] < 0)
+                {
+                    dirWeights.Remove("right");
+                }
+                if (dirWeights["down"] < 0)
+                {
+                    dirWeights.Remove("down");
+                }
+                if (dirWeights["up"] < 0)
+                {
+                    dirWeights.Remove("up");
+                }
+            }
+            else if (lastDirection == GameVars.DIR.DOWN)
+            {
+                // Going DOWN
+                if (dirWeights["down"] < 0)
+                {
+                    dirWeights.Remove("down");
+                }
+                if (dirWeights["left"] < 0)
+                {
+                    dirWeights.Remove("left");
+                }
+                if (dirWeights["right"] < 0)
+                {
+                    dirWeights.Remove("right");
+                }
+            }
+            else
+            {
+                // Going UP
+                if (dirWeights["up"] < 0)
+                {
+                    dirWeights.Remove("up");
+                }
+                if (dirWeights["left"] < 0)
+                {
+                    dirWeights.Remove("left");
+                }
+                if (dirWeights["right"] < 0)
+                {
+                    dirWeights.Remove("right");
+                }
+            }
+
+            if (lastDirection == GameVars.DIR.LEFT)
+            {
+                // Going LEFT
+                choice = "";
+
+                if (dirWeights.ContainsKey("left"))
+                    choice = "left";
+                else if (dirWeights.ContainsKey("down"))
+                    choice = "down";
+                else if (dirWeights.ContainsKey("up"))
+                    choice = "up";
+                else if (dirWeights.ContainsKey("right"))
+                    choice = "right";
+            }
+            else if (lastDirection == GameVars.DIR.RIGHT)
+            {
+                // Going RIGHT
+                choice = "";
+
+                if (dirWeights.ContainsKey("right"))
+                    choice = "right";
+                else if (dirWeights.ContainsKey("up"))
+                    choice = "up";
+                else if (dirWeights.ContainsKey("down"))
+                    choice = "down";
+                else if (dirWeights.ContainsKey("left"))
+                    choice = "left";
+            }
+            else if (lastDirection == GameVars.DIR.UP)
+            {
+                // Going UP
+                choice = "";
+
+                if (dirWeights.ContainsKey("up"))
+                    choice = "up";
+                else if (dirWeights.ContainsKey("left"))
+                    choice = "left";
+                else if (dirWeights.ContainsKey("right"))
+                    choice = "right";
+                else if (dirWeights.ContainsKey("down"))
+                    choice = "down";
+            }
+            else
+            {
+                // Going DOWN
+                choice = "";
+
+                if (dirWeights.ContainsKey("down"))
+                    choice = "down";
+                else if (dirWeights.ContainsKey("right"))
+                    choice = "right";
+                else if (dirWeights.ContainsKey("left"))
+                    choice = "left";
+                else if (dirWeights.ContainsKey("up"))
+                    choice = "up";
+            }
+
+            // Check remaining direction weights
+            foreach (var weight in dirWeights)
+            {
+                if (choice == "")
+                    choice = weight.Key;
+
+                if (weight.Key != choice)
+                {
+                    if (weight.Value > dirWeights[choice])
+                        choice = weight.Key;
+                    else if (weight.Value == dirWeights[choice])
+                    {
+                        Random rnd = new Random();
+                        int tmp = rnd.Next(1, 2);
+
+                        if (tmp == 2)
+                            choice = weight.Key;
+                    }
+                }
+            }
+
+            return choice;
+        }
+
         public void Eat(Vector2 lastDirection)
         {
             if (pac != null)
             {
-                int left = checkFuga(GameVars.DIR.LEFT.ToPoint());
-                int right = checkFuga(GameVars.DIR.RIGHT.ToPoint());
-                int down = checkFuga(GameVars.DIR.DOWN.ToPoint());
-                int up = checkFuga(GameVars.DIR.UP.ToPoint());
+                Dictionary<string, int> dirWeights = new Dictionary<string, int>();
+                dirWeights["left"] = checkFuga(GameVars.DIR.LEFT.ToPoint());
+                dirWeights["right"] = checkFuga(GameVars.DIR.RIGHT.ToPoint());
+                dirWeights["down"] = checkFuga(GameVars.DIR.DOWN.ToPoint());
+                dirWeights["up"] = checkFuga(GameVars.DIR.UP.ToPoint());
 
+                switch( ConfirmDirections(dirWeights, lastDirection) )
+                {
+                    case "left":
+                        pac.MoveLeft();
+                        break;
+
+                    case "right":
+                        pac.MoveRight();
+                        break;
+
+                    case "down":
+                        pac.MoveDown();
+                        break;
+
+                    case "up":
+                    default:
+                        pac.MoveUp();
+                        break;
+                }
+
+
+                /*
                 if (lastDirection == GameVars.DIR.LEFT)
                 {
                     if (left >= up && left >= down && left >= right)
@@ -156,6 +334,7 @@ namespace Pacman_IA.Behaviour
                         pac.MoveUp();
                     }
                 }
+                /**/
 
             }
         }
@@ -163,20 +342,12 @@ namespace Pacman_IA.Behaviour
         private int checkFuga(Point direction)
         {
             int retval = 0;
-            int lin = pac.GridLocation.ToPoint().Y;
-            int col = pac.GridLocation.ToPoint().X;
+            Point location = pac.GridLocation.ToPoint();
 
-
-            if (lin == 5 && col == 17)
-            {
-                string aa = "asda";
-            }
-
-            if (GameMap.wallLevel[lin + direction.Y, col + direction.X] == -1)
+            if (GameMap.wallLevel[location.Y + direction.Y, location.X + direction.X] == -1)
             {
                 // Not blocked
-                int tmpLin = lin + direction.Y;
-                int tmpCol = col + direction.X;
+                Point tmpLocation = new Point(location.X + direction.X, location.Y + direction.Y);
                 bool ghostFound = false;
                 bool ghostCollisionCourse = false;
                 bool hasFood = false;
@@ -186,35 +357,31 @@ namespace Pacman_IA.Behaviour
                 int ySize = GameMap.wallLevel.GetLength(0);
 
                 // Scan selected direction
-                while (tmpLin >= 0 && tmpLin < (ySize - 1)
-                    && tmpCol >= 0 && tmpCol < (xSize - 1)
-                    && GameMap.wallLevel[tmpLin, tmpCol] == -1
+                while (tmpLocation.Y >= 0 && tmpLocation.Y < (ySize - 1)
+                    && tmpLocation.X >= 0 && tmpLocation.X < (xSize - 1)
+                    && GameMap.wallLevel[tmpLocation.Y, tmpLocation.X] == -1
                 )
                 {
-                    Vector2 posCheck = new Vector2(tmpCol, tmpLin);
-
-                    if (GameMap.pelletLevel[tmpLin, tmpCol] != -1)
+                    if (GameMap.pelletLevel[tmpLocation.Y, tmpLocation.X] != -1)
                     {
                         hasFood = true;
-                        totalFood += GameMap.pelletLevel[tmpLin, tmpCol];
+                        totalFood += GameMap.pelletLevel[tmpLocation.Y, tmpLocation.X];
                     }
                     else
-                    {
                         foodDistance++;
-                    }
 
-                    if (GameVars.Blinky.GridLocation == posCheck || GameVars.Pinky.GridLocation == posCheck
-                        || GameVars.Inky.GridLocation == posCheck || GameVars.Clyde.GridLocation == posCheck
+                    if (GameVars.Blinky.GridLocation == tmpLocation.ToVector2() || GameVars.Pinky.GridLocation == tmpLocation.ToVector2()
+                        || GameVars.Inky.GridLocation == tmpLocation.ToVector2() || GameVars.Clyde.GridLocation == tmpLocation.ToVector2()
                     )
                     {
                         // Found a Ghost!
                         ghostFound = true;
 
-                        if ((tmpCol == col && tmpLin == lin)
-                            || GameVars.Blinky.Direction == new Vector2(direction.X * -1, direction.Y * -1)
-                            || GameVars.Pinky.Direction == new Vector2(direction.X * -1, direction.Y * -1)
-                            || GameVars.Inky.Direction == new Vector2(direction.X * -1, direction.Y * -1)
-                            || GameVars.Clyde.Direction == new Vector2(direction.X * -1, direction.Y * -1)
+                        if ((tmpLocation.X == location.X && tmpLocation.Y == location.Y)
+                            || GameVars.Blinky.Direction == ReverseDirection(direction)
+                            || GameVars.Pinky.Direction == ReverseDirection(direction)
+                            || GameVars.Inky.Direction == ReverseDirection(direction)
+                            || GameVars.Clyde.Direction == ReverseDirection(direction)
                         )
                         {
                             // Ghost is running in your direction
@@ -223,23 +390,27 @@ namespace Pacman_IA.Behaviour
                     }
 
                     // Update scanning position
-                    tmpLin += direction.Y;
-                    tmpCol += direction.X;
+                    tmpLocation.X += direction.X;
+                    tmpLocation.Y += direction.Y;
                 }
 
                 if (ghostFound)
                 {
                     // Ghost have been found
+
+                    retval = -1;
+
                     if (ghostCollisionCourse)
-                    {
-                        // Ghost in collision course
+                        retval = -2;
+
+                    /*
+                    // Ghost in collision course
+                    if (ghostCollisionCourse)
                         retval = -2000;
-                    }
+                    // No collision course
                     else
-                    {
-                        // No collision course
                         retval = -1000;
-                    }
+                    */
                 }
 
                 if (retval >= -1)
@@ -248,30 +419,19 @@ namespace Pacman_IA.Behaviour
                     if (hasFood)
                     {
                         // Has food / PowerPellet
-                        int tmp = (totalFood - 3 * foodDistance);
+                        /*int tmp = (totalFood - 3 * foodDistance);
 
                         retval += (tmp > 0 ? tmp : 1);
-                    }
-
-                    if (hasFruit())
-                    {
-                        // Has fruit
-                        retval += 100;
+                        */
+                        retval++;
                     }
                 }
             }
+            // Blocked
             else
-            {
-                // Blocked
                 retval = -1;
-            }
 
             return retval;
-        }
-
-        private bool hasFruit()
-        {
-            return false;
         }
     }
 }

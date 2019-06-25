@@ -26,6 +26,8 @@ namespace Pacman_IA.GameObjects
         protected Vector2 direction;
         protected Vector2 lastDirection;
 
+        protected float timer;
+
         protected Vector4 outerBound;
         protected Vector4 innerBound;
         protected Rectangle outerRect;
@@ -48,6 +50,11 @@ namespace Pacman_IA.GameObjects
         public string teste = "";
 
         #region Properties
+
+        public float Timer {
+            get { return timer; }
+            set { timer = value; }
+        }
 
         public Vector2 Location {
             get { return location; }
@@ -146,6 +153,7 @@ namespace Pacman_IA.GameObjects
         protected virtual void InitBehaviour()
         {
             okToBehave = true;
+            timer = 0.0f;
         }
 
         public bool IsMoving
@@ -507,16 +515,8 @@ namespace Pacman_IA.GameObjects
             }
             /**/
 
-            /*
-            if (!moving)
-                sprite.animationPause();
-            */
-
-
             // Update chosen animation
-            //if (moving || !(this is Pacman))
             sprite.animationPlay(command);
-            /**/
         }
 
         public void Draw()
@@ -568,6 +568,8 @@ namespace Pacman_IA.GameObjects
             menuMessage5 = "Ok To Behave: " + OkToBehave.ToString();
             menuMessage6 = "Collided: " + collided.ToString();
 
+            menuMessage4 = "Timer: " + timer.ToString();
+
             cor = Color.Red;
 
             float y1 = 346;
@@ -587,24 +589,28 @@ namespace Pacman_IA.GameObjects
                 centerPosition = new Vector2(x2, y1);
                 cor = Color.Red;
                 menuMessage6 = "Speed: " + speed.ToString();
+                menuMessage5 = "Ghost Mode: " + ((Blinky)this).GhostMode;
             }
             else if (this is Pinky)
             {
                 centerPosition = new Vector2(x1, y1);
                 cor = Color.Purple;
                 menuMessage6 = "Speed: " + speed.ToString();
+                menuMessage5 = "Ghost Mode: " + ((Pinky)this).GhostMode;
             }
             else if (this is Inky)
             {
                 centerPosition = new Vector2(x2, y2);
                 cor = Color.Cyan;
                 menuMessage6 = "Speed: " + speed.ToString();
+                menuMessage5 = "Ghost Mode: " + ((Inky)this).GhostMode;
             }
             else if (this is Clyde)
             {
                 centerPosition = new Vector2(x1, y2);
                 cor = Color.Orange;
                 menuMessage6 = "Speed: " + speed.ToString();
+                menuMessage5 = "Ghost Mode: " + ((Clyde)this).GhostMode;
             }
 
             float yStep = 16;
