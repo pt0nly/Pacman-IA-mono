@@ -79,10 +79,9 @@ namespace Pacman_IA.Behaviour
 
                 if (pacmanChoice == "")
                 {
-                    Random rnd = new Random();
                     if (total < 1)
                         total = 1;
-                    int tmp = rnd.Next(1, total);
+                    int tmp = GameVars.rand.Next(1, total);
 
                     if (tmp == 1)
                     {

@@ -87,16 +87,12 @@ namespace Pacman_IA.Behaviour
                 }
             }
 
-            //Dictionary<string, int> dirWeights = base.Chase(lastDirection);
             Dictionary<string, int> dirWeights = new Dictionary<string, int>();
 
-            //if (dirWeights["left"] >= 4000 || dirWeights["right"] >= 4000 || dirWeights["down"] >= 4000 || dirWeights["up"] >= 4000)
-            //{
-                // Patrol the area
-                ScatterBehaviour scatter = new ScatterBehaviour(ghost, patrol[currPatrol]);
+            // Patrol the area
+            ScatterBehaviour scatter = new ScatterBehaviour(ghost, patrol[currPatrol]);
 
-                dirWeights = scatter.Scatter(lastDirection);
-            //}
+            dirWeights = scatter.Scatter(lastDirection);
 
             return dirWeights;
         }

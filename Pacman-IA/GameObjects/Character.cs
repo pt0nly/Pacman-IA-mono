@@ -215,7 +215,6 @@ namespace Pacman_IA.GameObjects
             toggleUp = false;
             toggleDown = false;
 
-            //boundRadius /= 2;
             boundRadius = (int)boundRadius / 2;
 
             command = startCommand;
@@ -488,6 +487,7 @@ namespace Pacman_IA.GameObjects
             t.SetData(new[] { Color.White });
 
             int bw = 2;
+            // Uncomment to see boundary rectangles
             /**
             // Left
             GameGraphics.spriteBatch.Draw(t, new Rectangle(innerRect.Left, innerRect.Top, bw, innerRect.Height), Color.Blue);
@@ -510,6 +510,8 @@ namespace Pacman_IA.GameObjects
             GameGraphics.spriteBatch.Draw(t, new Rectangle(outerRect.Left, outerRect.Bottom, outerRect.Width, bw), Color.Green);
             /**/
 
+
+            // Uncomment to see debug
             /**
             string menuMessage = "";
             string menuMessage1 = "";

@@ -33,8 +33,7 @@ namespace Pacman_IA.Behaviour
             // Check if we can continue on this direction
             if (lastDirection == GameVars.DIR.EMPTY)
             {
-                Random rndDir = new Random();
-                int choice = rndDir.Next(1, 4);
+                int choice = GameVars.rand.Next(1, 4);
 
                 if (choice == 1)
                 {

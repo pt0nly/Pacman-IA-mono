@@ -34,7 +34,6 @@ namespace Pacman_IA.GameObjects
 
         private void calculateBoundaries()
         {
-            //outerRect = new Rectangle(location.ToPoint(), new Point(sprite.Width, sprite.Height));
             outerRect = new Rectangle(location.ToPoint(), new Point(32, 32));
         }
 
@@ -67,9 +66,8 @@ namespace Pacman_IA.GameObjects
 
             int bw = 2;
 
+            // Uncomment to see boundaries
             /**
-            //if (this.type.Equals(GameVars.WALL_TYPE.DOOR))
-            {
             // Left
             GameGraphics.spriteBatch.Draw(t, new Rectangle(outerRect.Left, outerRect.Top, bw, outerRect.Height), Color.Red);
             // Right
@@ -78,7 +76,6 @@ namespace Pacman_IA.GameObjects
             GameGraphics.spriteBatch.Draw(t, new Rectangle(outerRect.Left, outerRect.Top, outerRect.Width, bw), Color.Red);
             // Bottom
             GameGraphics.spriteBatch.Draw(t, new Rectangle(outerRect.Left, outerRect.Bottom, outerRect.Width, bw), Color.Red);
-            }
             /**/
 
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Pacman_IA.GameObjects;
+using System;
 
 namespace Pacman_IA.Classes
 {
@@ -11,6 +12,8 @@ namespace Pacman_IA.Classes
         public static int PacmanLives = STARTING_LIVES;
         public static int Score = 0;
         public static bool GameOver = false;
+
+        public static Random rand = new Random();
 
         public static int PacmanScore = 0;
         public static int BlinkyScore = 0;

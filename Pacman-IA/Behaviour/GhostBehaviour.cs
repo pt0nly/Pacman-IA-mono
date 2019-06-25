@@ -174,8 +174,7 @@ namespace Pacman_IA.Behaviour
                         choice = weight.Key;
                     else if (weight.Value == dirWeights[choice])
                     {
-                        Random rnd = new Random();
-                        int tmp = rnd.Next(1, 2);
+                        int tmp = GameVars.rand.Next(1, 2);
 
                         if (tmp == 2)
                             choice = weight.Key;
@@ -337,8 +336,7 @@ namespace Pacman_IA.Behaviour
 
                 if (lastDirection == GameVars.DIR.EMPTY)
                 {
-                    Random rndDir = new Random();
-                    int choice = rndDir.Next(1, 4);
+                    int choice = GameVars.rand.Next(1, 4);
                     firstRun = true;
 
                     if (choice == 1)

@@ -25,6 +25,7 @@ namespace Pacman_IA.Behaviour
             bool pacLocated = pacmanLocated;
             Dictionary<string, int> dirWeights = base.Chase(lastDirection);
 
+            /*
             if (pacmanLocated && !pacLocated)
             {
                 if (ghost.GridLocation == pacmanLastPosition)
@@ -39,6 +40,7 @@ namespace Pacman_IA.Behaviour
                     dirWeights = scatter.Scatter(lastDirection);
                 }
             }
+            */
 
             return dirWeights;
         }
@@ -55,16 +57,6 @@ namespace Pacman_IA.Behaviour
                 if (pacmanLastPosition == GameVars.DIR.INVALID)
                     pacmanLocated = false;
 
-                /*
-                if (pacmanLocated && !ghost.GridLocation.Equals(pacmanLastPosition))
-                {
-                    // Pacman located! Keep trying to ambush Pacman.
-                    ScatterBehaviour scatter = new ScatterBehaviour(ghost, pacmanLastPosition);
-
-                    retval = scatter.checkScatter(direction);
-                }
-                else
-                */
                 {
                     // Don't know where pacman is
                     int tmpLin = lin;
