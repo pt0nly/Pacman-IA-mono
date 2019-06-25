@@ -35,7 +35,7 @@ namespace Pacman_IA.GameObjects
             sprite.animationAdd("left", 4, 6, 260.0f);
             sprite.animationAdd("up", 6, 8, 260.0f);
 
-            normalSpeed = new Vector2(55);
+            normalSpeed = new Vector2(61);
             Speed = normalSpeed;
         }
 
@@ -109,137 +109,57 @@ namespace Pacman_IA.GameObjects
             }
         }
 
+        public override bool CharacterCollision(Character person)
+        {
+            if (GameVars.PacmanLives > 0 && PowerUpTime <= 0.0f)
+            {
+                if (this.innerRect.Intersects(person.InnerBound))
+                {
+                    GameVars.PacmanLives--;
+
+                    if (person is Blinky)
+                        GameVars.BlinkyScore++;
+                    else if (person is Pinky)
+                        GameVars.PinkyScore++;
+                    else if (person is Inky)
+                        GameVars.InkyScore++;
+                    else if (person is Clyde)
+                        GameVars.ClydeScore++;
+
+                    if (GameVars.PacmanLives <= 0)
+                        GameVars.GameOver = true;
+                    else
+                    {
+                        GameVars.Blinky.Respawn();
+                        GameVars.Pinky.Respawn();
+                        GameVars.Inky.Respawn();
+                        GameVars.Clyde.Respawn();
+
+                        // Respawn Pacman
+                        Respawn();
+                    }
+
+                    return true;
+                }
+            }
+
+            return base.CharacterCollision(person);
+        }
+
         #endregion
-        private bool toggleF1 = false;
-        private bool toggleF2 = false;
-        /**/
+
         public override void Update()
         {
+            // Check PowerUp Timer
             CheckPowerUpTime();
 
-            gridLocation = GameMap.getGridLocation(location)[0];
-
-            // Update which Animation/Movement
-            KeyboardState state = Keyboard.GetState();
-
-            if (state.IsKeyDown(Keys.Left) && !toggleLeft)
-            {
-                toggleLeft = true;
-                /*
-                moving = true;
-                command = "left";
-                direction = new Vector2(-1, 0);
-                lastDirection = direction;
-
-                int lin = gridLocation.ToPoint().Y;
-                int col = gridLocation.ToPoint().X - 1;
-                destination = GameMap.posLevel[lin, col];
-                /**/
-
-                MoveLeft();
-            }
-            else if (state.IsKeyUp(Keys.Left) && toggleLeft)
-            {
-                toggleLeft = false;
-            }
-
-            else if (state.IsKeyDown(Keys.F1) && !toggleF1)
-            {
-                toggleF1 = true;
-                okToBehave = true;
-            }
-            else if (state.IsKeyUp(Keys.F1) && toggleF1)
-            {
-                toggleF1 = false;
-            }
-
-            else if (state.IsKeyDown(Keys.F2) && !toggleF2)
-            {
-                toggleF2 = true;
-                okToBehave = false;
-            }
-            else if (state.IsKeyUp(Keys.F2) && toggleF2)
-            {
-                toggleF2 = false;
-            }
-
-            else if (state.IsKeyDown(Keys.Right) && !toggleRight)
-            {
-                toggleRight = true;
-                /*
-                moving = true;
-                command = "right";
-                direction = new Vector2(1, 0);
-                lastDirection = direction;
-
-                int lin = gridLocation.ToPoint().Y;
-                int col = gridLocation.ToPoint().X + 1;
-                destination = GameMap.posLevel[lin, col];
-                /**/
-
-                MoveRight();
-            }
-            else if (state.IsKeyUp(Keys.Right) && toggleRight)
-            {
-                toggleRight = false;
-            }
-            else if (state.IsKeyDown(Keys.Down) && !toggleDown)
-            {
-                toggleDown = true;
-                /*
-                moving = true;
-                command = "down";
-                direction = new Vector2(0, 1);
-                lastDirection = direction;
-
-                int lin = gridLocation.ToPoint().Y + 1;
-                int col = gridLocation.ToPoint().X;
-                destination = GameMap.posLevel[lin, col];
-                /**/
-
-                MoveDown();
-
-            }
-            else if (state.IsKeyUp(Keys.Down) && toggleDown)
-            {
-                toggleDown = false;
-            }
-            else if (state.IsKeyDown(Keys.Up) && !toggleUp)
-            {
-                toggleUp = true;
-                /*
-                moving = true;
-                command = "up";
-                direction = new Vector2(0, -1);
-                lastDirection = direction;
-
-                int lin = gridLocation.ToPoint().Y - 1;
-                int col = gridLocation.ToPoint().X;
-                destination = GameMap.posLevel[lin, col];
-                /**/
-
-                MoveUp();
-            }
-            else if (state.IsKeyUp(Keys.Up) && toggleUp)
-            {
-                toggleUp = false;
-            }
-            //else if (state.IsKeyDown(Keys.F6))
-            //{
-                //sprite.animationPause();
-                //direction = Vector2.Zero;
-                //deltaMove = 0;
-            //}
-            else if (!moving)
-            {
-                //command = "idle";
-                //sprite.animationStop();
-                //direction = Vector2.Zero;
-                //deltaMove = 0;
-            }
+            if (!CharacterCollision(GameVars.Blinky))
+                if (!CharacterCollision(GameVars.Pinky))
+                    if (!CharacterCollision(GameVars.Inky))
+                        CharacterCollision(GameVars.Clyde);
 
             base.Update();
         }
-        /**/
+
     }
 }

@@ -3,9 +3,6 @@ using Pacman_IA.Classes;
 using Pacman_IA.GameObjects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pacman_IA.Behaviour
 {
@@ -49,7 +46,6 @@ namespace Pacman_IA.Behaviour
 
             wave = 1;
             waveMode = 1;
-            //ghost.Timer = 0.0f;
         }
 
         private string ConfirmDirections(Dictionary<string, int> dirWeights, bool firstRun)
@@ -211,9 +207,29 @@ namespace Pacman_IA.Behaviour
             return new Vector2(direction.X * -1, direction.Y * -1);
         }
 
-        private void CheckWaves()
+        private bool CheckWaves()
         {
-            if (GameVars.Pacman.PowerUp > 0.0f)
+            if (ghost.IsDead)
+            {
+                if (ghostMode != GameVars.GHOST_MODE.DEAD)
+                {
+                    ghostMode = GameVars.GHOST_MODE.DEAD;
+                    ghost.Timer = 0.0f;
+                }
+                else
+                {
+                    // Update timer
+                    ghost.Timer += (float)(GameVars.gameTime.ElapsedGameTime.TotalMilliseconds / 100);
+
+                    if (ghost.Timer >= 3.0f)
+                    {
+                        // Respawn and exit behaviour
+                        ghost.Respawn();
+                        return false;
+                    }
+                }
+            }
+            else if (GameVars.Pacman.PowerUp > 0.0f)
             {
                 // Pacman is Energized!! Must flee!!
                 ghost.Speed = ghost.SpeedScared;
@@ -309,6 +325,8 @@ namespace Pacman_IA.Behaviour
                     wave++;
                 }
             }
+
+            return true;
         }
 
         public void Behave(Vector2 lastDirection)
@@ -353,22 +371,11 @@ namespace Pacman_IA.Behaviour
 
                 if (!ghost.IsMoving || ghost.HasCollided)
                 {
-                    CheckWaves();
+                    if (!CheckWaves())
+                        return;
+
+                    // Update LastDirection
                     lastDirection = lstDirection;
-
-                    /*
-                    if ((ghost is Clyde || ghost is Blinky || ghost is Pinky) && !ghost.InSpawn)
-                        ghostMode = GameVars.GHOST_MODE.CHASE;
-                    else
-                        ghostMode = GameVars.GHOST_MODE.SCATTER;
-
-                    if (!ghost.InSpawn)
-                        ghostMode = GameVars.GHOST_MODE.CHASE;
-
-                    ghostMode = GameVars.GHOST_MODE.SCATTER;
-                    /**/
-
-
 
                     Dictionary<string, int> dirWeights = new Dictionary<string, int>();
 
@@ -383,224 +390,14 @@ namespace Pacman_IA.Behaviour
                             dirWeights = scatterBehaviour.Scatter(lastDirection);
                             break;
 
+                        case GameVars.GHOST_MODE.DEAD:
                         case GameVars.GHOST_MODE.WANDER:
-                            //dirWeights = wanderBehaviour.Wander(lastDirection);
+                            dirWeights = wanderBehaviour.Wander(lastDirection);
                             break;
                     }
 
                     Move( ConfirmDirections(dirWeights, firstRun) );
-
-
-
-
-
-
-
-
-                    /**
-                    if (lastDirection == GameVars.DIR.LEFT)
-                    {
-                        // Going LEFT (default)
-                        if (left >= 0 && left == down && left == up)
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 3);
-
-                            if (tmp == 1)
-                                ghost.MoveLeft();
-                            else if (tmp == 2)
-                                ghost.MoveDown();
-                            else
-                                ghost.MoveUp();
-                        }
-                        else if (left >= 0 && (left == down || left == up))
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 2);
-
-                            if (tmp == 1)
-                                ghost.MoveLeft();
-                            else if (left == down)
-                                ghost.MoveDown();
-                            else
-                                ghost.MoveUp();
-                        }
-                        else if (down >= 0 && down == up)
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 2);
-
-                            if (tmp == 1)
-                                ghost.MoveDown();
-                            else
-                                ghost.MoveUp();
-                        }
-                        else if (left >= down && left >= up)
-                            ghost.MoveLeft();
-                        else if (down > left && down >= up)
-                            ghost.MoveDown();
-                        else if (up > left && up > down)
-                            ghost.MoveUp();
-                        else
-                            ghost.MoveRight();
-                    }
-                    else if (lastDirection == GameVars.DIR.RIGHT)
-                    {
-                        // Going RIGHT
-                        if (right >= 0 && right == up && right == down)
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 3);
-
-                            if (tmp == 1)
-                                ghost.MoveRight();
-                            else if (tmp == 2)
-                                ghost.MoveUp();
-                            else
-                                ghost.MoveDown();
-                        }
-                        else if (right >= 0 && (right == up || right == down))
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 2);
-
-                            if (tmp == 1)
-                                ghost.MoveRight();
-                            else if (right == up)
-                                ghost.MoveUp();
-                            else
-                                ghost.MoveDown();
-                        }
-                        else if (up >= 0 && up == down)
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 2);
-
-                            if (tmp == 1)
-                                ghost.MoveUp();
-                            else
-                                ghost.MoveDown();
-                        }
-                        else if (right >= up && right >= down)
-                            ghost.MoveRight();
-                        else if (up > right && up >= down)
-                            ghost.MoveUp();
-                        else if (down > right && down > up)
-                            ghost.MoveDown();
-                        else
-                            ghost.MoveLeft();
-                    }
-                    else if (lastDirection == GameVars.DIR.UP)
-                    {
-                        // Going UP
-                        if (up >= 0 && up == left && up == right)
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 3);
-
-                            if (tmp == 1)
-                                ghost.MoveUp();
-                            else if (tmp == 2)
-                                ghost.MoveLeft();
-                            else
-                                ghost.MoveRight();
-                        }
-                        else if (up >= 0 && (up == left || up == right))
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 2);
-
-                            if (tmp == 1)
-                                ghost.MoveUp();
-                            else if (up == left)
-                                ghost.MoveLeft();
-                            else
-                                ghost.MoveRight();
-                        }
-                        else if (left >= 0 && left == right)
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 2);
-
-                            if (tmp == 1)
-                                ghost.MoveLeft();
-                            else
-                                ghost.MoveRight();
-                        }
-                        else if (up >= left && up >= right)
-                            ghost.MoveUp();
-                        else if (left > up && left >= right)
-                            ghost.MoveLeft();
-                        else if (right > up && right > left)
-                            ghost.MoveRight();
-                        else
-                            ghost.MoveDown();
-                    }
-                    else
-                    {
-                        // Going DOWN
-                        if (down >= 0 && down == right && down == left)
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 3);
-
-                            if (tmp == 1)
-                                ghost.MoveDown();
-                            else if (tmp == 2)
-                                ghost.MoveRight();
-                            else
-                                ghost.MoveLeft();
-                        }
-                        else if (down >= 0 && (down == right || down == left))
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 2);
-
-                            if (tmp == 1)
-                                ghost.MoveDown();
-                            else if (down == right)
-                                ghost.MoveRight();
-                            else
-                                ghost.MoveLeft();
-                        }
-                        else if (right >= 0 && right == left)
-                        {
-                            Random rnd = new Random();
-                            int tmp = rnd.Next(1, 2);
-
-                            if (tmp == 1)
-                                ghost.MoveRight();
-                            else
-                                ghost.MoveLeft();
-                        }
-                        else if (down >= right && down >= left)
-                            ghost.MoveDown();
-                        else if (right > down && right >= left)
-                            ghost.MoveRight();
-                        else if (left > down && left > right)
-                            ghost.MoveLeft();
-                        else
-                            ghost.MoveUp();
-                    }
-
-                    /**/
-
-
-                    // Avança posição
-
-
-                    // Modo Susto ?
-
-                    // Colidiu ?
-
-                    // Espera 3 segundos para fazer respawn
-
-
-
                 }
-
-
-
             }
         }
     }

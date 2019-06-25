@@ -61,6 +61,24 @@ namespace Pacman_IA.Behaviour
         {
             string choice = "";
 
+            if (dirWeights["left"] < 0)
+            {
+                dirWeights.Remove("left");
+            }
+            if (dirWeights["right"] < 0)
+            {
+                dirWeights.Remove("right");
+            }
+            if (dirWeights["down"] < 0)
+            {
+                dirWeights.Remove("down");
+            }
+            if (dirWeights["up"] < 0)
+            {
+                dirWeights.Remove("up");
+            }
+
+            /*
             if (lastDirection == GameVars.DIR.LEFT)
             {
                 // Going LEFT
@@ -182,6 +200,7 @@ namespace Pacman_IA.Behaviour
                 else if (dirWeights.ContainsKey("up"))
                     choice = "up";
             }
+            /**/
 
             // Check remaining direction weights
             foreach (var weight in dirWeights)
@@ -202,6 +221,21 @@ namespace Pacman_IA.Behaviour
                             choice = weight.Key;
                     }
                 }
+            }
+
+            if (choice == "")
+            {
+                Random rnd = new Random();
+                int tmp = rnd.Next(1, 4);
+
+                choice = "up";
+
+                if (tmp == 1)
+                    choice = "left";
+                else if (tmp == 2)
+                    choice = "right";
+                else if (tmp == 3)
+                    choice = "down";
             }
 
             return choice;
@@ -355,6 +389,7 @@ namespace Pacman_IA.Behaviour
                 int foodDistance = 0;
                 int xSize = GameMap.wallLevel.GetLength(1);
                 int ySize = GameMap.wallLevel.GetLength(0);
+                bool hole = false;
 
                 // Scan selected direction
                 while (tmpLocation.Y >= 0 && tmpLocation.Y < (ySize - 1)
@@ -362,13 +397,18 @@ namespace Pacman_IA.Behaviour
                     && GameMap.wallLevel[tmpLocation.Y, tmpLocation.X] == -1
                 )
                 {
-                    if (GameMap.pelletLevel[tmpLocation.Y, tmpLocation.X] != -1)
+                    if (GameMap.pelletLevel[tmpLocation.Y, tmpLocation.X] != -1 && !hole)
                     {
                         hasFood = true;
-                        totalFood += GameMap.pelletLevel[tmpLocation.Y, tmpLocation.X];
+                        //if (GameMap.pelletLevel[tmpLocation.Y, tmpLocation.X] > 10)
+                            totalFood += GameMap.pelletLevel[tmpLocation.Y, tmpLocation.X];
                     }
                     else
+                    {
                         foodDistance++;
+                        if (hasFood)
+                            hole = true;
+                    }
 
                     if (GameVars.Blinky.GridLocation == tmpLocation.ToVector2() || GameVars.Pinky.GridLocation == tmpLocation.ToVector2()
                         || GameVars.Inky.GridLocation == tmpLocation.ToVector2() || GameVars.Clyde.GridLocation == tmpLocation.ToVector2()
@@ -423,7 +463,7 @@ namespace Pacman_IA.Behaviour
 
                         retval += (tmp > 0 ? tmp : 1);
                         */
-                        retval++;
+                        retval += 1 + totalFood;
                     }
                 }
             }

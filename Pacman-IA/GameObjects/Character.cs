@@ -46,10 +46,15 @@ namespace Pacman_IA.GameObjects
         protected bool toggleDown;
 
         protected bool inSpawn;
-
-        public string teste = "";
+        protected bool isDead;
 
         #region Properties
+
+        public bool IsDead
+        {
+            get { return isDead; }
+            set { isDead = value; }
+        }
 
         public float Timer {
             get { return timer; }
@@ -138,6 +143,28 @@ namespace Pacman_IA.GameObjects
 
         #endregion
 
+        public void Respawn()
+        {
+            Location = spawnLocation;
+            direction = Vector2.Zero;
+            deltaMove = 0;
+            gridLocation = Vector2.Zero;
+            collided = false;
+            moving = false;
+            isDead = false;
+            inSpawn = true;
+
+            toggleLeft = false;
+            toggleRight = false;
+            toggleUp = false;
+            toggleDown = false;
+
+            boundRadius = (int)boundRadius / 2;
+
+            calculateBoundaries();
+            InitBehaviour();
+        }
+
         public void SetLocation(Vector2 newLocation)
         {
             location = newLocation;
@@ -181,6 +208,7 @@ namespace Pacman_IA.GameObjects
             gridLocation = Vector2.Zero;
             collided = false;
             moving = false;
+            isDead = false;
 
             toggleLeft = false;
             toggleRight = false;
@@ -213,13 +241,13 @@ namespace Pacman_IA.GameObjects
             Point outerPt = location.ToPoint();
 
             // Calculate innerRect location and size
-            center.X += ((width / 2) - 14);
-            center.Y += ((height / 2) - 14);
+            center.X += ((width / 2) - 14 + 6);
+            center.Y += ((height / 2) - 14 + 6);
 
             outerPt.X += 2;
             outerPt.Y += 2;
 
-            innerRect = new Rectangle(center, new Point(26));
+            innerRect = new Rectangle(center, new Point(14));
             outerRect = new Rectangle(location.ToPoint(), new Point(width));
         }
 
@@ -264,7 +292,9 @@ namespace Pacman_IA.GameObjects
         public virtual void MoveLeft()
         {
             if (!(this is Pacman) && GameVars.Pacman.PowerUp > 0.0f)
-                if (GameVars.Pacman.PowerUp <= 3.0f)
+                if (isDead)
+                    command = "dead";
+                else if (GameVars.Pacman.PowerUp <= 3.0f)
                     command = "flash";
                 else
                     command = "run";
@@ -279,7 +309,9 @@ namespace Pacman_IA.GameObjects
         public void MoveRight()
         {
             if (!(this is Pacman) && GameVars.Pacman.PowerUp > 0.0f)
-                if (GameVars.Pacman.PowerUp <= 3.0f)
+                if (isDead)
+                    command = "dead";
+                else if (GameVars.Pacman.PowerUp <= 3.0f)
                     command = "flash";
                 else
                     command = "run";
@@ -294,7 +326,9 @@ namespace Pacman_IA.GameObjects
         public void MoveUp()
         {
             if (!(this is Pacman) && GameVars.Pacman.PowerUp > 0.0f)
-                if (GameVars.Pacman.PowerUp <= 3.0f)
+                if (isDead)
+                    command = "dead";
+                else if (GameVars.Pacman.PowerUp <= 3.0f)
                     command = "flash";
                 else
                     command = "run";
@@ -309,7 +343,9 @@ namespace Pacman_IA.GameObjects
         public void MoveDown()
         {
             if (!(this is Pacman) && GameVars.Pacman.PowerUp > 0.0f)
-                if (GameVars.Pacman.PowerUp <= 3.0f)
+                if (isDead)
+                    command = "dead";
+                else if (GameVars.Pacman.PowerUp <= 3.0f)
                     command = "flash";
                 else
                     command = "run";
@@ -334,14 +370,15 @@ namespace Pacman_IA.GameObjects
             okToBehave = false;
         }
 
+        public virtual bool CharacterCollision(Character person)
+        {
+            return false;
+        }
+
         public virtual void Update()
         {
+            // Update current gridLocation
             gridLocation = GameMap.getGridLocation(location)[0];
-
-            if (this is Pacman && gridLocation == new Vector2(16, 5))
-            {
-                string aa = "asda";
-            }
 
             CheckBehaviour();
 
@@ -404,8 +441,7 @@ namespace Pacman_IA.GameObjects
                 okToBehave = true;
             }
 
-            /**/
-            if (collided /*|| !moving*/)
+            if (collided)
             {
                 if ((location.Y - 1) == destination.Y)
                 {
@@ -422,98 +458,22 @@ namespace Pacman_IA.GameObjects
                 }
                 okToBehave = true;
 
-                /*
-                if (this is Pacman)
-                {
-                    int lin = GridLocation.ToPoint().Y;
-                    int col = GridLocation.ToPoint().X;
-
-                    if (lastDirection == GameVars.DIR.LEFT)
-                    {
-                        // Going LEFT
-
-                        if (GameMap.wallLevel[lin + GameVars.DIR.DOWN.ToPoint().Y, col + GameVars.DIR.DOWN.ToPoint().X] == -1)
-                        {
-                            // DOWN is OK
-                            direction = GameVars.DIR.DOWN;
-                        }
-                        else if (GameMap.wallLevel[lin + GameVars.DIR.UP.ToPoint().Y, col + GameVars.DIR.UP.ToPoint().X] == -1)
-                        {
-                            // UP is OK
-                            direction = GameVars.DIR.UP;
-                        }
-                        else if (GameMap.wallLevel[lin + GameVars.DIR.RIGHT.ToPoint().Y, col + GameVars.DIR.RIGHT.ToPoint().X] == -1)
-                        {
-                            // RIGHT is OK
-                            direction = GameVars.DIR.RIGHT;
-                        }
-                    }
-                    else if (lastDirection == GameVars.DIR.RIGHT) {
-                        // Going RIGHT
-
-                        if (GameMap.wallLevel[lin + GameVars.DIR.DOWN.ToPoint().Y, col + GameVars.DIR.DOWN.ToPoint().X] == -1)
-                        {
-                            // DOWN is OK
-                            direction = GameVars.DIR.DOWN;
-                        }
-                        else if (GameMap.wallLevel[lin + GameVars.DIR.UP.ToPoint().Y, col + GameVars.DIR.UP.ToPoint().X] == -1)
-                        {
-                            // UP is OK
-                            direction = GameVars.DIR.UP;
-                        }
-                        else if (GameMap.wallLevel[lin + GameVars.DIR.LEFT.ToPoint().Y, col + GameVars.DIR.LEFT.ToPoint().X] == -1)
-                        {
-                            // LEFT is OK
-                            direction = GameVars.DIR.LEFT;
-                        }
-                    }
-                    else if (lastDirection == GameVars.DIR.DOWN)
-                    {
-                        // Going DOWN
-
-                        if (GameMap.wallLevel[lin + GameVars.DIR.LEFT.ToPoint().Y, col + GameVars.DIR.LEFT.ToPoint().X] == -1)
-                        {
-                            // LEFT is OK
-                            direction = GameVars.DIR.LEFT;
-                        }
-                        else if (GameMap.wallLevel[lin + GameVars.DIR.RIGHT.ToPoint().Y, col + GameVars.DIR.RIGHT.ToPoint().X] == -1)
-                        {
-                            // RIGHT is OK
-                            direction = GameVars.DIR.RIGHT;
-                        }
-                        else if (GameMap.wallLevel[lin + GameVars.DIR.UP.ToPoint().Y, col + GameVars.DIR.UP.ToPoint().X] == -1)
-                        {
-                            // UP is OK
-                            direction = GameVars.DIR.UP;
-                        }
-                    }
-                    else
-                    {
-                        // Going UP
-
-                        if (GameMap.wallLevel[lin + GameVars.DIR.LEFT.ToPoint().Y, col + GameVars.DIR.LEFT.ToPoint().X] == -1)
-                        {
-                            // LEFT is OK
-                            direction = GameVars.DIR.LEFT;
-                        }
-                        else if (GameMap.wallLevel[lin + GameVars.DIR.RIGHT.ToPoint().Y, col + GameVars.DIR.RIGHT.ToPoint().X] == -1)
-                        {
-                            // RIGHT is OK
-                            direction = GameVars.DIR.RIGHT;
-                        }
-                        else if (GameMap.wallLevel[lin + GameVars.DIR.DOWN.ToPoint().Y, col + GameVars.DIR.DOWN.ToPoint().X] == -1)
-                        {
-                            // DOWN is OK
-                            direction = GameVars.DIR.DOWN;
-                        }
-                    }
-
-                    lastDirection = direction;
-                    collided = false;
-                }/**/
                 moving = true;
             }
-            /**/
+
+            if (!(this is Pacman))
+            {
+                if (sprite == spriteNormal)
+                {
+                    if (command == "run" || command == "flash" || command == "dead")
+                        command = "right";
+                }
+                else
+                {
+                    if (command != "run" && command != "flash" && command != "dead")
+                        command = "run";
+                }
+            }
 
             // Update chosen animation
             sprite.animationPlay(command);
@@ -550,6 +510,7 @@ namespace Pacman_IA.GameObjects
             GameGraphics.spriteBatch.Draw(t, new Rectangle(outerRect.Left, outerRect.Bottom, outerRect.Width, bw), Color.Green);
             /**/
 
+            /**
             string menuMessage = "";
             string menuMessage1 = "";
             string menuMessage2 = "";
@@ -641,7 +602,7 @@ namespace Pacman_IA.GameObjects
             // Has Collided
             centerPosition.Y += yStep;
             GameGraphics.spriteBatch.DrawString(GameGraphics.infoFont, menuMessage6, centerPosition, cor);
-
+            /**/
         }
     }
 }

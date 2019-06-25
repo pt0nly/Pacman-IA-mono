@@ -365,6 +365,11 @@ namespace Pacman_IA.Classes
                 pellet.Update();
             }
             pellets.RemoveAll(a => a.removed);
+
+            if (pellets.Count <= 0)
+            {
+                GameVars.GameOver = true;
+            }
         }
 
         public static void Draw()

@@ -44,6 +44,23 @@ namespace Pacman_IA.GameObjects
             base.LoadSprite();
         }
 
+        public override bool CharacterCollision(Character person)
+        {
+            if (!isDead && person is Pacman && (GhostMode == GameVars.GHOST_MODE.WANDER || GameVars.Pacman.PowerUp > 0.0f))
+            {
+                if (this.innerRect.Intersects(person.InnerBound))
+                {
+                    isDead = true;
+                    GameVars.Score += 200;
+                    GameVars.PacmanScore++;
+
+                    return true;
+                }
+            }
+
+            return base.CharacterCollision(person);
+        }
+
 
         #region Constructor
 
@@ -96,5 +113,11 @@ namespace Pacman_IA.GameObjects
 
         #endregion
 
+        public override void Update()
+        {
+            CharacterCollision(GameVars.Pacman);
+
+            base.Update();
+        }
     }
 }

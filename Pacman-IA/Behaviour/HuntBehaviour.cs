@@ -185,8 +185,10 @@ namespace Pacman_IA.Behaviour
                     retval.foodDistance++;
                 }
 
-                if (GameVars.Blinky.GridLocation == tmpLocation.ToVector2() || GameVars.Pinky.GridLocation == tmpLocation.ToVector2()
-                    || GameVars.Inky.GridLocation == tmpLocation.ToVector2() || GameVars.Clyde.GridLocation == tmpLocation.ToVector2()
+                if ((GameVars.Blinky.GridLocation == tmpLocation.ToVector2() && !GameVars.Blinky.IsDead)
+                    || (GameVars.Pinky.GridLocation == tmpLocation.ToVector2() && !GameVars.Pinky.IsDead)
+                    || (GameVars.Inky.GridLocation == tmpLocation.ToVector2() && !GameVars.Inky.IsDead)
+                    || (GameVars.Clyde.GridLocation == tmpLocation.ToVector2() && !GameVars.Clyde.IsDead)
                 )
                 {
                     // Found a Ghost!

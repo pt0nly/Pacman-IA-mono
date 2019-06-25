@@ -74,7 +74,13 @@ namespace Pacman_IA.GameObjects
                     GameMap.pelletLevel[posGridLoc.Y, posGridLoc.X] = -1;
 
                     if (type == GameVars.PELLET_TYPE.POWER)
+                    {
                         GameVars.Pacman.StartPowerUpTime();
+
+                        GameVars.Score += 50;
+                    }
+                    else
+                        GameVars.Score += 10;
 
                     removed = true;
                 }

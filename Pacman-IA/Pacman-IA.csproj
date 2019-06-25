@@ -93,6 +93,8 @@
     <Compile Include="Sprites\Animated.cs" />
     <Compile Include="Sprites\Animation.cs" />
     <Compile Include="Sprites\Sprite.cs" />
+    <Compile Include="UI\GuiButton.cs" />
+    <Compile Include="UI\InGameHud.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

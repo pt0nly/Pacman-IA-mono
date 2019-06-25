@@ -13,11 +13,20 @@ namespace Pacman_IA.Behaviour
     {
         private Vector2 pacmanLastPosition;
         private bool pacmanLocated;
+        private bool runToPacman;
 
         public ChaseRandom(Character person) : base(person)
         {
             pacmanLastPosition = GameVars.DIR.INVALID;
             pacmanLocated = false;
+            runToPacman = true;
+        }
+
+        public ChaseRandom(Character person, bool runAfterPacman) : base(person)
+        {
+            pacmanLastPosition = GameVars.DIR.INVALID;
+            pacmanLocated = false;
+            runToPacman = runAfterPacman;
         }
 
         public override Dictionary<string, int> Chase(Vector2 lastDirection)
@@ -71,6 +80,8 @@ namespace Pacman_IA.Behaviour
                 if (pacmanChoice == "")
                 {
                     Random rnd = new Random();
+                    if (total < 1)
+                        total = 1;
                     int tmp = rnd.Next(1, total);
 
                     if (tmp == 1)
@@ -180,9 +191,9 @@ namespace Pacman_IA.Behaviour
                         else
                         {
                             if (pacmanLocated)
-                                retval = 4;
+                                retval = runToPacman ? 4 : 1;
                             else
-                                retval = 2;
+                                retval = runToPacman ? 2 : 1;
                         }
                     }
                     else if (direction == GameVars.DIR.RIGHT.ToPoint())
@@ -196,9 +207,9 @@ namespace Pacman_IA.Behaviour
                         else
                         {
                             if (pacmanLocated)
-                                retval = 4;
+                                retval = runToPacman ? 4 : 1;
                             else
-                                retval = 2;
+                                retval = runToPacman ? 2 : 1;
                         }
                     }
                     else if (direction == GameVars.DIR.UP.ToPoint())
@@ -212,9 +223,9 @@ namespace Pacman_IA.Behaviour
                         else
                         {
                             if (pacmanLocated)
-                                retval = 4;
+                                retval = runToPacman ? 4 : 1;
                             else
-                                retval = 2;
+                                retval = runToPacman ? 2 : 1;
                         }
                     }
                     else
@@ -228,9 +239,9 @@ namespace Pacman_IA.Behaviour
                         else
                         {
                             if (pacmanLocated)
-                                retval = 4;
+                                retval = runToPacman ? 4 : 1;
                             else
-                                retval = 2;
+                                retval = runToPacman ? 2 : 1;
                         }
                     }
                 }

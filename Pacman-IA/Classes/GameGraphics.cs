@@ -4,13 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Pacman_IA.GameObjects;
 using Pacman_IA.Sprites;
+using Pacman_IA.UI;
 
 namespace Pacman_IA.Classes
 {
     public class GameGraphics
     {
-        private const int SCREEN_WIDTH = 800;
-        private const int SCREEN_HEIGHT = 600;
+        public const int SCREEN_WIDTH = 800;
+        public const int SCREEN_HEIGHT = 600;
 
         private static Game game;
 
@@ -18,10 +19,14 @@ namespace Pacman_IA.Classes
         private static ContentManager content;
         public static SpriteBatch spriteBatch;
         public static SpriteFont gameFont;
+        public static SpriteFont gameOverFont;
         public static SpriteFont infoFont;
 
         private static Texture2D background;
         private static Rectangle mainFrame;
+
+        private static InGameHud gameHud;
+
 
         #region Properties
 
@@ -70,7 +75,10 @@ namespace Pacman_IA.Classes
             GameVars.Clyde = new Clyde(new Vector2(300, 500), "left");
 
             gameFont = Content.Load<SpriteFont>("gameFont");
+            gameOverFont = Content.Load<SpriteFont>("gameOverFont");
             infoFont = Content.Load<SpriteFont>("infoFont");
+
+            gameHud = new InGameHud();
         }
 
         public static void Update()
@@ -79,13 +87,19 @@ namespace Pacman_IA.Classes
             if (Keyboard.GetState().IsKeyDown(Keys.F10))
                 graphics.ToggleFullScreen();
 
-            GameVars.Pacman.Update();
-            GameVars.Blinky.Update();
-            GameVars.Pinky.Update();
-            GameVars.Inky.Update();
-            GameVars.Clyde.Update();
+            if (!GameVars.GameOver)
+            {
+                GameVars.Pacman.Update();
+                GameVars.Blinky.Update();
+                GameVars.Pinky.Update();
+                GameVars.Inky.Update();
+                GameVars.Clyde.Update();
+            }
 
             GameMap.Update();
+
+            // Update the Game Hud
+            gameHud.Update();
         }
 
         public static void Draw()
@@ -94,7 +108,7 @@ namespace Pacman_IA.Classes
 
 
             // Draw Tiled Background
-            /**
+            /**/
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
             spriteBatch.Draw(background, Vector2.Zero, mainFrame, Color.White);
             spriteBatch.End();
@@ -114,6 +128,8 @@ namespace Pacman_IA.Classes
 
             if (GameVars.Pacman.PowerUp > 0.0f)
                 GameVars.Pacman.Draw();
+
+            gameHud.Draw();
 
             spriteBatch.End();
         }

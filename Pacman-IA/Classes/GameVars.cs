@@ -5,8 +5,18 @@ namespace Pacman_IA.Classes
 {
     public static class GameVars
     {
-        public const int STARTING_LIVES = 3;
+        public const int STARTING_LIVES = 7;
         public static bool Game_Loaded = false;
+
+        public static int PacmanLives = STARTING_LIVES;
+        public static int Score = 0;
+        public static bool GameOver = false;
+
+        public static int PacmanScore = 0;
+        public static int BlinkyScore = 0;
+        public static int PinkyScore = 0;
+        public static int InkyScore = 0;
+        public static int ClydeScore = 0;
 
         public static Pacman Pacman;
         public static Blinky Blinky;
@@ -104,7 +114,8 @@ namespace Pacman_IA.Classes
         {
             CHASE,
             SCATTER,
-            WANDER
+            WANDER,
+            DEAD
         }
 
         public enum PACMAN_MODE
